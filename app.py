@@ -4,6 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
+    mountains = ['Everest', 'K2', 'Kilimanjaro', 'Lhotse', 'Makalu']
     return render_template('index.html', mountain = 'Everest')
 
 #if __name__ == "__main__":
