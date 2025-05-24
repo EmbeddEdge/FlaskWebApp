@@ -1,3 +1,16 @@
 # Web Framework
-Flask
+Flask == 2.3.3
 Gunicorn
+
+# PostgreSQL database adapter
+psycopg2-binary==2.9.7
+
+# Supabase Python client
+supabase==1.0.4
+
+# Additional useful packages
+python-dotenv==1.0.0  # For loading environment variables from .env file
+gunicorn==21.2.0       # WSGI server for production deployment
+
+# Optional: For enhanced logging and monitoring
+Werkzeug==2.3.7
