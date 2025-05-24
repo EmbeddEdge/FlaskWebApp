@@ -29,11 +29,27 @@ def get_db_connection():
     This is useful for complex queries or when you need direct SQL access
     """
     try:
+        # Parse the DATABASE_URL if it's in URL format
+        database_url = DATABASE_URL
+        
+        # Handle different URL formats
+        if database_url and database_url.startswith('postgresql://'):
+            # Supabase URLs sometimes use postgresql:// which needs to be postgres://
+            database_url = database_url.replace('postgresql://', 'postgres://', 1)
+        
+        if not database_url:
+            logger.error("DATABASE_URL environment variable not set")
+            return None
+            
         conn = psycopg2.connect(
-            DATABASE_URL,
-            cursor_factory=RealDictCursor  # Returns results as dictionaries
+            database_url,
+            cursor_factory=RealDictCursor,
+            sslmode='require'  # Supabase requires SSL
         )
         return conn
+    except psycopg2.OperationalError as e:
+        logger.error(f"Database operational error: {e}")
+        return None
     except Exception as e:
         logger.error(f"Database connection error: {e}")
         return None
@@ -139,21 +155,19 @@ def create_task():
 def complete_task(task_id):
     """
     Mark a task as completed
-    Demonstrates UPDATE operation using direct SQL
+    Using Supabase client instead of direct SQL for better reliability
     """
     try:
-        conn = get_db_connection()
-        if not conn:
-            return jsonify({'error': 'Database connection failed'}), 500
-            
-        with conn.cursor() as cur:
-            cur.execute(
-                "UPDATE tasks SET completed = TRUE, updated_at = NOW() WHERE id = %s",
-                (task_id,)
-            )
-            conn.commit()
+        # Use Supabase client for the update operation
+        response = supabase.table('tasks').update({
+            'completed': True,
+            'updated_at': 'now()'
+        }).eq('id', task_id).execute()
         
-        conn.close()
+        if not response.data:
+            logger.warning(f"No task found with ID: {task_id}")
+            return jsonify({'error': 'Task not found'}), 404
+        
         logger.info(f"Completed task ID: {task_id}")
         return redirect('/')
         
@@ -217,24 +231,47 @@ def api_create_task():
 def health_check():
     """
     Health check endpoint for monitoring
-    Tests database connectivity
+    Tests database connectivity and provides debugging info
     """
+    health_info = {
+        'status': 'healthy',
+        'environment_variables': {
+            'SUPABASE_URL': 'set' if SUPABASE_URL else 'missing',
+            'SUPABASE_KEY': 'set' if SUPABASE_KEY else 'missing',
+            'DATABASE_URL': 'set' if DATABASE_URL else 'missing'
+        }
+    }
+    
     try:
-        # Test Supabase connection
+        # Test Supabase client connection
         response = supabase.table('tasks').select('count', count='exact').execute()
+        health_info['supabase_client'] = 'connected'
+        health_info['task_count'] = response.count
         
-        return jsonify({
-            'status': 'healthy',
-            'database': 'connected',
-            'task_count': response.count
-        })
     except Exception as e:
-        logger.error(f"Health check failed: {e}")
-        return jsonify({
-            'status': 'unhealthy',
-            'database': 'disconnected',
-            'error': str(e)
-        }), 500
+        logger.error(f"Supabase client test failed: {e}")
+        health_info['supabase_client'] = f'failed: {str(e)}'
+        health_info['status'] = 'unhealthy'
+    
+    try:
+        # Test direct PostgreSQL connection
+        conn = get_db_connection()
+        if conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT COUNT(*) FROM tasks")
+                result = cur.fetchone()
+                health_info['direct_postgres'] = 'connected'
+                health_info['direct_count'] = result[0] if result else 0
+            conn.close()
+        else:
+            health_info['direct_postgres'] = 'connection failed'
+            
+    except Exception as e:
+        logger.error(f"Direct PostgreSQL test failed: {e}")
+        health_info['direct_postgres'] = f'failed: {str(e)}'
+    
+    status_code = 200 if health_info['status'] == 'healthy' else 500
+    return jsonify(health_info), status_code
 
 # Helper function for redirects (since we're not importing redirect)
 def redirect(location, code=302):
