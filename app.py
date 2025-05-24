@@ -1,7 +1,7 @@
 # app.py - Flask application with Supabase integration
 
 import os
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, request, jsonify, render_template
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from supabase import create_client, Client
@@ -119,10 +119,10 @@ def index():
         response = supabase.table('tasks').select('*').order('created_at', desc=True).execute()
         tasks = response.data
         
-        return render_template_string(HTML_TEMPLATE, tasks=tasks)
+        return render_template('supabasetest.html', tasks=tasks)
     except Exception as e:
         logger.error(f"Error fetching tasks: {e}")
-        return render_template_string(HTML_TEMPLATE, tasks=[])
+        return render_template('supabasetest.html', tasks=[])
 
 @app.route('/tasks', methods=['POST'])
 def create_task():

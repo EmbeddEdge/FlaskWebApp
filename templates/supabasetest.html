@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Supabase Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; }
+        .form-group { margin: 20px 0; }
+        input, textarea { padding: 10px; margin: 5px; width: 300px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .task { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .completed { background-color: #d4edda; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager - Flask + Supabase Demo</h1>
+        
+        <div class="form-group">
+            <h3>Add New Task</h3>
+            <form action="/tasks" method="POST">
+                <input type="text" name="title" placeholder="Task title" required><br>
+                <textarea name="description" placeholder="Task description"></textarea><br>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        <div class="form-group">
+            <h3>All Tasks</h3>
+            <div id="tasks">
+                {% for task in tasks %}
+                <div class="task {% if task.completed %}completed{% endif %}">
+                    <h4>{{ task.title }}</h4>
+                    <p>{{ task.description or 'No description' }}</p>
+                    <p><small>Created: {{ task.created_at }}</small></p>
+                    {% if not task.completed %}
+                        <form action="/tasks/{{ task.id }}/complete" method="POST" style="display: inline;">
+                            <button type="submit">Mark Complete</button>
+                        </form>
+                    {% endif %}
+                    <form action="/tasks/{{ task.id }}/delete" method="POST" style="display: inline;">
+                        <button type="submit" style="background: #dc3545;">Delete</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
