@@ -85,7 +85,7 @@ def update_balance():
         # Update balance using Supabase client
         response = supabase.table('accounts').update({
             'balance': title  # assuming 'title' contains the new balance value
-        }).eq('id', request.form.get('account_id')).execute()
+        }).eq('id', 1).execute()
         
         logger.info(f"Updated balance to: {title}")
         return redirect('/')
