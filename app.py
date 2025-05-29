@@ -57,38 +57,35 @@ def get_db_connection():
 @app.route('/')
 def index():
     """
-    Home page - displays all tasks
+    Home page - displays all accounts
     Uses Supabase Python client for simple operations
     """
     try:
-        # Fetch all tasks using Supabase client
-        response = supabase.table('tasks').select('*').order('created_at', desc=True).execute()
-        tasks = response.data
+        # Fetch all accounts using Supabase client
+        response = supabase.table('accounts').select('*').order('created_at', desc=True).execute()
+        accounts = response.data
         
-        return render_template('supabasetest.html', tasks=tasks)
+        return render_template('financedash.html', accounts=accounts)
     except Exception as e:
-        logger.error(f"Error fetching tasks: {e}")
-        return render_template('supabasetest.html', tasks=[])
+        logger.error(f"Error fetching accounts: {e}")
+        return render_template('financedash.html', accounts=[])
 
-@app.route('/tasks', methods=['POST'])
-def create_task():
+@app.route('/balance', methods=['POST'])
+def update_balance():
     """
-    Create a new task
-    Demonstrates INSERT operation using Supabase client
+    Modify the balance column in the accounts table
     """
     try:
-        title = request.form.get('title')
+        title = request.form.get('account balance')
         description = request.form.get('description')
         
         if not title:
             return jsonify({'error': 'Title is required'}), 400
         
-        # Insert new task using Supabase client
-        response = supabase.table('tasks').insert({
-            'title': title,
-            'description': description,
-            'completed': False
-        }).execute()
+        # Update balance using Supabase client
+        response = supabase.table('accounts').update({
+            'balance': title  # assuming 'title' contains the new balance value
+        }).eq('id', request.form.get('id')).execute()
         
         logger.info(f"Created task: {title}")
         return redirect('/')
