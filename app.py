@@ -85,14 +85,14 @@ def update_balance():
         # Update balance using Supabase client
         response = supabase.table('accounts').update({
             'balance': title  # assuming 'title' contains the new balance value
-        }).eq('id', request.form.get('id')).execute()
+        }).eq('id', request.form.get('account_id')).execute()
         
-        logger.info(f"Created task: {title}")
+        logger.info(f"Updated balance to: {title}")
         return redirect('/')
         
     except Exception as e:
-        logger.error(f"Error creating task: {e}")
-        return jsonify({'error': 'Failed to create task'}), 500
+        logger.error(f"Error updating balance: {e}")
+        return jsonify({'error': 'Failed to update balance'}), 500
 
 @app.route('/tasks/<int:task_id>/complete', methods=['POST'])
 def complete_task(task_id):
