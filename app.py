@@ -93,6 +93,54 @@ def update_balance():
     except Exception as e:
         logger.error(f"Error updating balance: {e}")
         return jsonify({'error': 'Failed to update balance'}), 500
+    
+@app.route('/income', methods=['POST'])
+def update_income():
+    """
+    Modify the monthly_income column in the accounts table
+    """
+    try:
+        title = request.form.get('Monthly expenses')
+        description = request.form.get('description')
+        
+        if not title:
+            return jsonify({'error': 'Title is required'}), 400
+        
+        # Update balance using Supabase client
+        response = supabase.table('accounts').update({
+            'monthly_income': title  # assuming 'title' contains the new balance value
+        }).eq('id', 1).execute()
+        
+        logger.info(f"Updated monthly income to: {title}")
+        return redirect('/')
+        
+    except Exception as e:
+        logger.error(f"Error updating income: {e}")
+        return jsonify({'error': 'Failed to update income'}), 500
+    
+@app.route('/expense', methods=['POST'])
+def update_expense():
+    """
+    Modify the monthly_expense column in the accounts table
+    """
+    try:
+        title = request.form.get('Monthly expenses')
+        description = request.form.get('description')
+        
+        if not title:
+            return jsonify({'error': 'Title is required'}), 400
+        
+        # Update balance using Supabase client
+        response = supabase.table('accounts').update({
+            'monthly_expense': title  # assuming 'title' contains the new balance value
+        }).eq('id', 1).execute()
+        
+        logger.info(f"Updated monthly expenses to: {title}")
+        return redirect('/')
+        
+    except Exception as e:
+        logger.error(f"Error updating expenses: {e}")
+        return jsonify({'error': 'Failed to update expenses'}), 500
 
 @app.route('/tasks/<int:task_id>/complete', methods=['POST'])
 def complete_task(task_id):
