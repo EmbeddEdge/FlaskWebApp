@@ -100,7 +100,7 @@ def update_income():
     Modify the monthly_income column in the accounts table
     """
     try:
-        title = request.form.get('Monthly expenses')
+        title = request.form.get('Monthly income')
         description = request.form.get('description')
         
         if not title:
