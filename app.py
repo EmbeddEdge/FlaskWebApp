@@ -70,6 +70,23 @@ def index():
         logger.error(f"Error fetching accounts: {e}")
         return render_template('financedash.html', accounts=[])
 
+@app.route('/accounts', methods=['GET'])
+def accounts_dashboard():
+    """
+    Dashboard: Show all accounts, balances, and progress toward savings goals
+    """
+    try:
+        accounts_resp = supabase.table('accounts').select('*').execute()
+        goals_resp = supabase.table('savings_goals').select('*').execute()
+        transactions_resp = supabase.table('transactions').select('*').order('created_at', desc=True).limit(10).execute()
+        accounts = accounts_resp.data or []
+        goals = goals_resp.data or []
+        transactions = transactions_resp.data or []
+        return render_template('financefront.html', accounts=accounts, goals=goals, transactions=transactions)
+    except Exception as e:
+        logger.error(f"Error loading dashboard: {e}")
+        return render_template('financefront.html', accounts=[], goals=[], transactions=[])
+
 @app.route('/balance', methods=['POST'])
 def update_balance():
     """
@@ -218,6 +235,30 @@ def api_create_task():
         logger.error(f"API error creating task: {e}")
         return jsonify({'error': 'Failed to create task'}), 500
 
+@app.route('/transactions', methods=['POST'])
+def add_transaction():
+    """
+    Manual income/expense logging
+    """
+    try:
+        account_id = request.form.get('account_id')
+        t_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
+        amount = request.form.get('amount')
+        description = request.form.get('description')
+        if not (account_id and t_type and amount):
+            return jsonify({'error': 'Missing required fields'}), 400
+        response = supabase.table('transactions').insert({
+            'account_id': account_id,
+            'type': t_type,
+            'amount': amount,
+            'description': description
+        }).execute()
+        logger.info(f"Added transaction: {amount} {t_type} for account {account_id}")
+        return redirect('/accounts')
+    except Exception as e:
+        logger.error(f"Error adding transaction: {e}")
+        return jsonify({'error': 'Failed to add transaction'}), 500
+
 @app.route('/health')
 def health_check():
     """
@@ -263,6 +304,57 @@ def health_check():
     
     status_code = 200 if health_info['status'] == 'healthy' else 500
     return jsonify(health_info), status_code
+
+# Data models (for reference, not used directly with Supabase)
+class User:
+    def __init__(self, id, email, created_at):
+        self.id = id
+        self.email = email
+        self.created_at = created_at
+
+class Account:
+    def __init__(self, id, user_id, name, balance, monthly_income, monthly_expense, created_at):
+        self.id = id
+        self.user_id = user_id
+        self.name = name
+        self.balance = balance
+        self.monthly_income = monthly_income
+        self.monthly_expense = monthly_expense
+        self.created_at = created_at
+
+class SavingsGoal:
+    def __init__(self, id, user_id, name, target_amount, current_amount, category, created_at):
+        self.id = id
+        self.user_id = user_id
+        self.name = name
+        self.target_amount = target_amount
+        self.current_amount = current_amount
+        self.category = category
+        self.created_at = created_at
+
+class Transaction:
+    def __init__(self, id, account_id, type, amount, description, created_at):
+        self.id = id
+        self.account_id = account_id
+        self.type = type
+        self.amount = amount
+        self.description = description
+        self.created_at = created_at
+
+class Notification:
+    def __init__(self, id, user_id, content, sent_at, is_read):
+        self.id = id
+        self.user_id = user_id
+        self.content = content
+        self.sent_at = sent_at
+        self.is_read = is_read
+
+class Achievement:
+    def __init__(self, id, user_id, name, achieved_at):
+        self.id = id
+        self.user_id = user_id
+        self.name = name
+        self.achieved_at = achieved_at
 
 # Helper function for redirects (since we're not importing redirect)
 def redirect(location, code=302):
