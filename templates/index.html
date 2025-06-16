@@ -1,10 +1,13 @@
-<html>
-    <body>
-        <h1>Let's go for a hike page on the Pi!</h1>
-        <ul>
-            {% for mt in mountain %}
-            <li><a href="/mountain/{{ mt }}">{{ mt }}</a></li>
-            {% endfor %}
-        </ul>
-    </body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Books {% endblock %}</h1>
+    {% for book in books %}
+        <div class='book'>
+            <h3>#{{ book[0] }} - {{ book[1] }} BY {{ book[2] }}</h3>
+            <i><p>({{ book[3] }} pages)</p></i>
+            <p class='review'>{{ book[4] }}</p>
+            <i><p>Added {{ book[5] }}</p></i>
+        </div>
+    {% endfor %}
+{% endblock %}
