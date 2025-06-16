@@ -11,7 +11,6 @@ def get_db_connection():
                             password=os.environ['DB_PASSWORD'])
     return conn
 
-
 @app.route('/')
 def index():
     conn = get_db_connection()
@@ -21,3 +20,15 @@ def index():
     cur.close()
     conn.close()
     return render_template('index.html', books=books)
+
+@app.route("/home")
+def home():
+    mountains = ['Everest', 'K2', 'Kilimanjaro', 'Lhotse', 'Makalu', 'Seven', 'Five']
+    return render_template('index.html', mountain = mountains)
+
+@app.route("/mountain/<mt>")
+def mountain(mt):
+    return "This is the mountain page for " + mt
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5050)
