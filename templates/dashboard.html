@@ -15,7 +15,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <div class="flex-shrink-0 flex items-center">
-                        <h1 class="text-xl font-bold">Account Tracker</h1>
+                        <h1 class="text-xl font-bold">Secondary Account Tracker</h1>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -50,9 +50,11 @@
                                 <dl>
                                     <dt class="text-sm font-medium text-gray-500 truncate">
                                         Current Balance
+                                    <!-- Debug output -->
+                                    <pre>{{ accounts|safe }}</pre>
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ "%.2f"|format(accounts[0].balance if accounts else 0) }}
+                                        R{{ "%.2f"|format(accounts[0]['balance'] if accounts else 0) }}
                                     </dd>
                                 </dl>
                             </div>
