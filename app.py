@@ -1,7 +1,7 @@
-
 # app.py - Flask application with Supabase integration
 
 import os
+from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, render_template
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -58,18 +58,37 @@ def get_db_connection():
 @app.route('/')
 def index():
     """
-    Home page - displays all accounts
-    Uses Supabase Python client for simple operations
+    Main dashboard showing account overview, savings goals, and recent activity
     """
     try:
-        # Fetch all accounts using Supabase client
-        response = supabase.table('accounts').select('*').order('created_at', desc=True).execute()
-        accounts = response.data
+        # Fetch account data
+        account_response = supabase.table('accounts').select('*').execute()
+        accounts = account_response.data or []
         
-        return render_template('financedash.html', accounts=accounts)
+        # Fetch savings goals
+        goals_response = supabase.table('savings_goals').select('*').execute()
+        goals = goals_response.data or []
+        
+        # Fetch recent transactions
+        transactions_response = supabase.table('transactions').select('*').order('created_at', desc=True).limit(5).execute()
+        transactions = transactions_response.data or []
+        
+        # Calculate savings recommendations if we have account data
+        savings_recommendation = None
+        if accounts:
+            monthly_income = accounts[0].get('monthly_income', 0)
+            current_savings = accounts[0].get('balance', 0)
+            savings_recommendation = calculate_savings_recommendation(monthly_income, current_savings)
+        
+        return render_template('dashboard.html',
+                            accounts=accounts,
+                            goals=goals,
+                            transactions=transactions,
+                            savings_recommendation=savings_recommendation)
+                            
     except Exception as e:
-        logger.error(f"Error fetching accounts: {e}")
-        return render_template('financedash.html', accounts=[])
+        logger.error(f"Error loading dashboard: {e}")
+        return render_template('dashboard.html', error="Failed to load dashboard data")
 
 @app.route('/accounts', methods=['GET'])
 def accounts_dashboard():
@@ -236,29 +255,124 @@ def api_create_task():
         logger.error(f"API error creating task: {e}")
         return jsonify({'error': 'Failed to create task'}), 500
 
-@app.route('/transactions', methods=['POST'])
-def add_transaction():
+@app.route('/account/update', methods=['POST'])
+def update_account():
     """
-    Manual income/expense logging
+    Update account details including balance, income, and expenses
     """
     try:
         account_id = request.form.get('account_id')
-        t_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
-        amount = request.form.get('amount')
-        description = request.form.get('description')
-        if not (account_id and t_type and amount):
+        field = request.form.get('field')  # 'balance', 'monthly_income', or 'monthly_expense'
+        value = request.form.get('value')
+        
+        if not all([account_id, field, value]):
             return jsonify({'error': 'Missing required fields'}), 400
+            
+        # Update the specified field
+        response = supabase.table('accounts').update({
+            field: value
+        }).eq('id', account_id).execute()
+        
+        if not response.data:
+            return jsonify({'error': 'Account not found'}), 404
+            
+        logger.info(f"Updated account {account_id} {field} to {value}")
+        return redirect('/')
+        
+    except Exception as e:
+        logger.error(f"Error updating account: {e}")
+        return jsonify({'error': 'Failed to update account'}), 500
+
+@app.route('/transactions/add', methods=['POST'])
+def add_transaction():
+    """
+    Record a new transaction (income, expense, or transfer)
+    """
+    try:
+        account_id = request.form.get('account_id')
+        transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
+        amount = float(request.form.get('amount', 0))
+        description = request.form.get('description', '')
+        
+        if not all([account_id, transaction_type, amount]):
+            return jsonify({'error': 'Missing required fields'}), 400
+        
+        # Start a transaction (will need to update both transactions and account balance)
         response = supabase.table('transactions').insert({
             'account_id': account_id,
-            'type': t_type,
+            'type': transaction_type,
             'amount': amount,
             'description': description
         }).execute()
-        logger.info(f"Added transaction: {amount} {t_type} for account {account_id}")
-        return redirect('/accounts')
+        
+        # Update account balance
+        if transaction_type == 'income':
+            supabase.table('accounts').update({
+                'balance': supabase.raw(f'balance + {amount}')
+            }).eq('id', account_id).execute()
+        elif transaction_type == 'expense':
+            supabase.table('accounts').update({
+                'balance': supabase.raw(f'balance - {amount}')
+            }).eq('id', account_id).execute()
+        
+        logger.info(f"Added {transaction_type} transaction: {amount}")
+        return redirect('/')
+        
     except Exception as e:
         logger.error(f"Error adding transaction: {e}")
         return jsonify({'error': 'Failed to add transaction'}), 500
+
+@app.route('/goals/add', methods=['POST'])
+def add_savings_goal():
+    """
+    Create a new savings goal
+    """
+    try:
+        account_id = request.form.get('account_id')
+        name = request.form.get('name')
+        target_amount = float(request.form.get('target_amount', 0))
+        category = request.form.get('category')
+        
+        if not all([account_id, name, target_amount]):
+            return jsonify({'error': 'Missing required fields'}), 400
+            
+        response = supabase.table('savings_goals').insert({
+            'account_id': account_id,
+            'name': name,
+            'target_amount': target_amount,
+            'current_amount': 0,
+            'category': category
+        }).execute()
+        
+        logger.info(f"Created savings goal: {name} with target {target_amount}")
+        return redirect('/')
+        
+    except Exception as e:
+        logger.error(f"Error creating savings goal: {e}")
+        return jsonify({'error': 'Failed to create savings goal'}), 500
+
+@app.route('/goals/<int:goal_id>/update', methods=['POST'])
+def update_savings_goal():
+    """
+    Update progress on a savings goal
+    """
+    try:
+        goal_id = request.form.get('goal_id')
+        current_amount = float(request.form.get('current_amount', 0))
+        
+        response = supabase.table('savings_goals').update({
+            'current_amount': current_amount
+        }).eq('id', goal_id).execute()
+        
+        if not response.data:
+            return jsonify({'error': 'Goal not found'}), 404
+            
+        logger.info(f"Updated goal {goal_id} progress to {current_amount}")
+        return redirect('/')
+        
+    except Exception as e:
+        logger.error(f"Error updating goal: {e}")
+        return jsonify({'error': 'Failed to update goal'}), 500
 
 @app.route('/health')
 def health_check():
@@ -305,6 +419,34 @@ def health_check():
     
     status_code = 200 if health_info['status'] == 'healthy' else 500
     return jsonify(health_info), status_code
+
+@app.route('/calculator', methods=['POST'])
+def calculate_savings():
+    """
+    Smart Savings Calculator
+    Provides personalized savings recommendations based on income and current savings
+    """
+    try:
+        monthly_income = float(request.form.get('monthly_income', 0))
+        current_savings = float(request.form.get('current_savings', 0))
+        
+        if not monthly_income:
+            return jsonify({'error': 'Monthly income is required'}), 400
+            
+        # Calculate recommended savings percentage
+        savings_rate = calculate_savings_recommendation(monthly_income, current_savings)
+        recommended_amount = monthly_income * savings_rate
+        
+        return jsonify({
+            'recommended_percentage': savings_rate * 100,
+            'recommended_amount': format_currency(recommended_amount),
+            'monthly_income': format_currency(monthly_income),
+            'current_savings': format_currency(current_savings)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error calculating savings: {e}")
+        return jsonify({'error': 'Failed to calculate savings recommendation'}), 500
 
 # Data models (for reference, not used directly with Supabase)
 class User:
@@ -372,6 +514,30 @@ def redirect(location, code=302):
     )
     response.headers['Location'] = location
     return response
+
+def calculate_savings_recommendation(monthly_income, current_savings, savings_history_months=3):
+    """
+    Calculate recommended savings based on income and history
+    Returns a percentage between 1-10%
+    """
+    base_rate = 0.05  # 5% base recommendation
+    
+    # Adjust based on current savings
+    if current_savings < monthly_income * 3:  # Less than 3 months expenses
+        base_rate += 0.02  # Increase recommendation
+    
+    # Cap at 10%
+    return min(0.10, base_rate)
+
+def format_currency(amount):
+    """Helper to format currency values"""
+    return "${:,.2f}".format(float(amount))
+
+def calculate_progress(current, target):
+    """Calculate percentage progress for goals"""
+    if target == 0:
+        return 0
+    return min(100, (current / target) * 100)
 
 if __name__ == '__main__':
     # Get port from environment variable (required for Render)
