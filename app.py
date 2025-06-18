@@ -67,6 +67,7 @@ def index():
         print(f"Accounts fetched: {accounts}")  # Debugging line
         if not accounts:
             logger.warning("No accounts found in the database")
+        print(f"first entry balance: {accounts[0].balance}")
         
         # Fetch savings goals
         goals_response = supabase.table('savings_goals').select('*').execute()
