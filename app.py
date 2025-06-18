@@ -64,10 +64,14 @@ def index():
         # Fetch account data
         account_response = supabase.table('accounts').select('*').execute()
         accounts = account_response.data or []
+        print(f"Accounts fetched: {accounts}")  # Debugging line
+        if not accounts:
+            logger.warning("No accounts found in the database")
         
         # Fetch savings goals
         goals_response = supabase.table('savings_goals').select('*').execute()
         goals = goals_response.data or []
+        
         
         # Fetch recent transactions
         transactions_response = supabase.table('transactions').select('*').order('created_at', desc=True).limit(5).execute()
