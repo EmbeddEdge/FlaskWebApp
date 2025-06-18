@@ -1,6 +1,6 @@
 import os
 import psycopg2
-from flask import Flask, render_template
+from flask import Flask, render_template, request, url_for, redirect
 
 app = Flask(__name__)
 
@@ -29,6 +29,10 @@ def home():
 @app.route("/mountain/<mt>")
 def mountain(mt):
     return "This is the mountain page for " + mt
+
+@app.route('/create/', methods=('GET', 'POST'))
+def create():
+    return render_template('create.html')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050)
