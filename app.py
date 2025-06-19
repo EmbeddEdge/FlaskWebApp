@@ -70,8 +70,8 @@ def index():
         print(f"first entry balance: {accounts[0]['balance']}")
         
         # Fetch savings goals
-        goals_response = supabase.table('savings_goals').select('*').execute()
-        goals = goals_response.data or []
+        #goals_response = supabase.table('savings_goals').select('*').execute()
+        #goals = goals_response.data or []
         
         
         # Fetch recent transactions
@@ -85,8 +85,10 @@ def index():
             current_savings = accounts[0].get('balance', 0)
             savings_recommendation = calculate_savings_recommendation(monthly_income, current_savings)
 
-        return render_template('financedash.html', accounts=accounts)
-                            
+        return render_template('dashboard.html', accounts=accounts,
+                               transactions=transactions,
+                               savings_recommendation=savings_recommendation)
+
     except Exception as e:
         logger.error(f"Error loading dashboard: {e}")
         return render_template('dashboard.html', error="Failed to load dashboard data")
