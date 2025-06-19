@@ -1,4 +1,4 @@
-# app.py - Flask application with Supabase integration
+# Secondary Account Finance Render Hosted Flask app with Supabase integration
 
 import os
 from datetime import datetime, timedelta
