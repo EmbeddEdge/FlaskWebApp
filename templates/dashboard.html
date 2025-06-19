@@ -54,7 +54,7 @@
                                     <pre>{{ accounts|safe }}</pre>
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ accounts[0].balance }}
+                                        R{{ "%.2f"|format(accounts[0]['balance'] if accounts else 5) }}
                                     </dd>
                                 </dl>
                             </div>
