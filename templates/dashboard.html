@@ -11,7 +11,7 @@
 <body class="bg-gray-100">
     <!-- Debug output -->
     <div class="container mx-auto px-4 py-6">
-        <pre>{{ accounts|safe }}</pre>
+        <pre>{{ accounts }}</pre>
     </div>
     <!-- Navigation -->
     <nav class="bg-white shadow-lg">
@@ -56,7 +56,7 @@
                                         Current Balance
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ (accounts[0]['balance'] if accounts else 5) }}
+                                        R{{ "%.2f"|format(accounts[0]['balance'] if accounts else 5) }}
                                     </dd>
                                 </dl>
                             </div>
@@ -142,9 +142,9 @@
                                     {% set percentage = 0 %}
                                     {% endif %}
 
-                                   <!-- <div style="width: {{ percentage }}%" 
+                                    <div style="width: {{ percentage }}%"
                                         class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500">
-                                    </div> -->
+                                    </div>
                                 </div>
                                 <div class="text-sm text-gray-600">
                                     R{{ "%.2f"|format(goal.current_amount) }} / R{{ "%.2f"|format(goal.target_amount) }}
