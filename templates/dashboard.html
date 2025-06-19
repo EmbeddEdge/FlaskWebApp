@@ -9,6 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100">
+    <!-- Debug output -->
+    <div class="container mx-auto px-4 py-6">
+        <pre>{{ accounts|safe }}</pre>
+    </div>
     <!-- Navigation -->
     <nav class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4">
@@ -50,8 +54,6 @@
                                 <dl>
                                     <dt class="text-sm font-medium text-gray-500 truncate">
                                         Current Balance
-                                    <!-- Debug output -->
-                                    <pre>{{ accounts|safe }}</pre>
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
                                         R{{ "%.2f"|format(accounts[0]['balance'] if accounts else 5) }}
