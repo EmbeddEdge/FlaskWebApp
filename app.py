@@ -84,12 +84,8 @@ def index():
             monthly_income = accounts[0].get('monthly_income', 0)
             current_savings = accounts[0].get('balance', 0)
             savings_recommendation = calculate_savings_recommendation(monthly_income, current_savings)
-        
-        return render_template('dashboard.html',
-                            accounts=accounts,
-                            goals=goals,
-                            transactions=transactions,
-                            savings_recommendation=savings_recommendation)
+
+        return render_template('dashboard.html', accounts=accounts)
                             
     except Exception as e:
         logger.error(f"Error loading dashboard: {e}")
