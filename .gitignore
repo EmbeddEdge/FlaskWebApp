@@ -5,3 +5,5 @@ refapp1.py
 AppRequirements.md
 myenv/
 myenv/lib/
+myenv/lib/__pycache__/
+myenv/lib/__pytest/
