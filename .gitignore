@@ -91,3 +91,4 @@ myenv/lib/python3.12/site-packages/pytest/__pycache__/__init__.cpython-312.pyc
 myenv/lib/python3.12/site-packages/sniffio/__pycache__/__init__.cpython-312.pyc
 myenv/lib/python3.12/site-packages/sniffio/__pycache__/_impl.cpython-312.pyc
 myenv/lib/python3.12/site-packages/sniffio/__pycache__/_version.cpython-312.pyc
+.DS_Store
