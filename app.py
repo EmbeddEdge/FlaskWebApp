@@ -1,3 +1,6 @@
+# Secondary Account Finance Pi Hosted Flask app with local PostgreSQL database
+
+
 import os
 import psycopg2
 from flask import Flask, render_template, request, url_for, redirect
