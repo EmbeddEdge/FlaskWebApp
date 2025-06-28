@@ -19,13 +19,29 @@ def get_db_connection():
 
 @app.route('/')
 def index():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT * FROM books;')
-    books = cur.fetchall()
-    cur.close()
-    conn.close()
-    return render_template('index.html', books=books)
+    try:    
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM accounts;')
+        accounts = cur.fetchall()
+        cur.execute('SELECT * FROM transactions;')
+        transactions = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        # Calculate savings recommendations if we have account data
+        savings_recommendation = None
+        if accounts:
+            monthly_income = accounts[0].get('monthly_income', 0)
+            current_savings = accounts[0].get('balance', 0)
+            savings_recommendation = calculate_savings_recommendation(monthly_income, current_savings)
+    
+        return render_template('dashboard.html', accounts=accounts,
+                                   transactions=transactions,
+                                   savings_recommendation=savings_recommendation)
+    except Exception as e:
+        logger.error(f"Error fetching data from database: {e}")
+        return render_template('dashboard.html', error_message="Could not fetch data from the database.")
 
 @app.route("/home")
 def home():
