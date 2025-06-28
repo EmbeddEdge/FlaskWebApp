@@ -39,7 +39,7 @@ def index():
                                    savings_recommendation=savings_recommendation)
     except Exception as e:
         logger.error(f"Error fetching data from database: {e}")
-        return render_template('dashboard.html', error_message="Could not fetch data from the database.")
+        return render_template('error.html', error_message="Could not fetch data from the database.")
 
 @app.route("/home")
 def home():
