@@ -84,4 +84,4 @@ def calculate_savings_recommendation(monthly_income, current_savings, savings_hi
     return min(0.10, base_rate)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5050)
+    app.run(debug=True, host="0.0.0.0", port=5050)
