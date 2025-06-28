@@ -34,6 +34,10 @@ def index():
             current_savings = accounts[0].get('balance', 0)
             savings_recommendation = calculate_savings_recommendation(monthly_income, current_savings)
     
+        logger.info(f"Accounts: {accounts}")
+        logger.info(f"Transactions: {transactions}")
+        logger.info(f"Savings Recommendation: {savings_recommendation}")
+
         return render_template('dashboard.html', accounts=accounts,
                                    transactions=transactions,
                                    savings_recommendation=savings_recommendation)
