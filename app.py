@@ -19,15 +19,13 @@ def get_db_connection():
 
 @app.route('/')
 def index():
-    try:    
-        conn = get_db_connection()
-        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cur.execute('SELECT * FROM accounts;')
-        accounts = cur.fetchall()
-        cur.execute('SELECT * FROM transactions;')
-        transactions = cur.fetchall()
-        cur.close()
-        conn.close()
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:    
+                cur.execute('SELECT * FROM accounts;')
+                accounts = cur.fetchall()
+                cur.execute('SELECT * FROM transactions;')
+                transactions = cur.fetchall()
 
         # Calculate savings recommendations if we have account data
         savings_recommendation = None
