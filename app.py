@@ -20,13 +20,16 @@ def get_db_connection():
 @app.route('/')
 def index():
     try:
-        logger.info("Starting debug")
         with get_db_connection() as conn:
             with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:    
                 cur.execute('SELECT * FROM accounts;')
                 accounts = cur.fetchall()
                 cur.execute('SELECT * FROM transactions;')
                 transactions = cur.fetchall()
+        
+        for t in transactions:
+            if t['created_at']:
+                t['created_at'] = t['created_at'].strftime('%Y-%m-%d')
 
         # Calculate savings recommendations if we have account data
         savings_recommendation = None
