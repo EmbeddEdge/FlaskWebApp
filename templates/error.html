@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Account Reconciliation Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold">Secondary Account Tracker - Pi Version</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-blue-500">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-blue-500">
+                        <i class="fas fa-chart-line"></i> Reports
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-blue-500">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Error Content -->
+    <div class="max-w-2xl mx-auto py-20 sm:px-6 lg:px-8">
+        <div class="bg-white shadow rounded-lg p-8 flex flex-col items-center">
+            <div class="mb-4">
+                <i class="fas fa-exclamation-triangle text-red-500 text-6xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Oops! Something went wrong.</h2>
+            <p class="text-gray-600 mb-6 text-center">
+                {% if error_message %}
+                    {{ error_message }}
+                {% else %}
+                    An unexpected error occurred. Please try again later or contact support if the problem persists.
+                {% endif %}
+            </p>
+            <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</body>
+</html>
