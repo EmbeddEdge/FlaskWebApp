@@ -20,6 +20,7 @@ def get_db_connection():
 @app.route('/')
 def index():
     try:
+        logger.info("Starting debug")
         with get_db_connection() as conn:
             with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:    
                 cur.execute('SELECT * FROM accounts;')
