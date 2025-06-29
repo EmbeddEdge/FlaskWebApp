@@ -293,7 +293,7 @@ def add_transaction():
     """
     try:
         #account_id = request.form.get('account_id')
-        account_id = 0 # Default to 0 for testing; should be replaced with actual account ID
+        account_id = -1 # Placeholder for account ID, should be set based on user context
         transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
         amount = float(request.form.get('amount', 0))
         description = request.form.get('description', '')
