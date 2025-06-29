@@ -293,7 +293,7 @@ def add_transaction():
     """
     try:
         #account_id = request.form.get('account_id')
-        account_id = 1 # Placeholder for account ID, should be set based on user context
+        account_id = 0 # Placeholder for account ID, should be set based on user context
         transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
         amount = float(request.form.get('amount', 0))
         description = request.form.get('description', '')
@@ -451,6 +451,30 @@ def calculate_savings():
     except Exception as e:
         logger.error(f"Error calculating savings: {e}")
         return jsonify({'error': 'Failed to calculate savings recommendation'}), 500
+
+@app.route('/admin/reset_transaction_id_seq', methods=['POST'])
+def reset_transaction_id_seq():
+    """
+    Admin endpoint to reset the transaction id sequence to the max id in the table.
+    Only use this if you know what you are doing!
+    """
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({'error': 'Database connection failed'}), 500
+        with conn.cursor() as cur:
+            # Get the max id from transactions
+            cur.execute('SELECT MAX(id) FROM transactions')
+            max_id = cur.fetchone()[0] or 0
+            # Try to reset the sequence (Postgres default sequence name convention)
+            cur.execute("SELECT setval('transactions_id_seq', %s)", (max_id,))
+            conn.commit()
+        conn.close()
+        logger.info(f"Reset transactions_id_seq to {max_id}")
+        return jsonify({'message': f'Successfully reset transactions_id_seq to {max_id}'})
+    except Exception as e:
+        logger.error(f"Error resetting transaction id sequence: {e}")
+        return jsonify({'error': 'Failed to reset transaction id sequence'}), 500
 
 # Data models (for reference, not used directly with Supabase)
 class User:
