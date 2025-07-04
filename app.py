@@ -452,12 +452,23 @@ def calculate_savings():
         logger.error(f"Error calculating savings: {e}")
         return jsonify({'error': 'Failed to calculate savings recommendation'}), 500
 
-@app.route('/admin/reset_transaction_id_seq', methods=['POST'])
+@app.route('/admin/reset_transaction_id_seq', methods=['GET', 'POST'])
 def reset_transaction_id_seq():
     """
     Admin endpoint to reset the transaction id sequence to the max id in the table.
     Only use this if you know what you are doing!
+    GET: Shows confirmation page
+    POST: Actually resets the sequence
     """
+    if request.method == 'GET':
+        return '''
+        <form method="POST">
+            <h3>Reset Transaction ID Sequence</h3>
+            <p>This will reset the transaction ID sequence to the maximum ID in the table.</p>
+            <input type="submit" value="Reset Sequence">
+        </form>
+        '''
+    
     try:
         conn = get_db_connection()
         if not conn:
