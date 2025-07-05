@@ -2,8 +2,8 @@
 
 import os
 from datetime import datetime, timedelta
-from flask import Flask, request, jsonify, render_template
-import psycopg2
+from flask import Flask, request, jsonify, render_template # type: ignore
+import psycopg2 # type: ignore
 from psycopg2.extras import RealDictCursor
 from supabase import create_client, Client
 import logging
@@ -298,7 +298,6 @@ def add_transaction():
         amount = float(request.form.get('amount', 0))
         description = request.form.get('description', '')
         
-        print(f"account_id: {account_id}, transaction_type: {transaction_type}, amount: {amount}, description: {description}")
         if account_id is None or transaction_type is None or amount is None:
             return jsonify({'error': 'Missing required fields'}), 400
         
@@ -309,16 +308,24 @@ def add_transaction():
             'amount': amount,
             'description': description
         }).execute()
+
+        # Fetch the current balance
+        account = supabase.table('accounts').select('balance').eq('id', account_id).single().execute()
+        current_balance = account.data['balance'] if account.data else 0
         
-        # Update account balance
+
+        # Calculate new balance
         if transaction_type == 'income':
-            supabase.table('accounts').update({
-                'balance': supabase.raw(f'balance + {amount}')
-            }).eq('id', account_id).execute()
+            new_balance = current_balance + amount
         elif transaction_type == 'expense':
-            supabase.table('accounts').update({
-                'balance': supabase.raw(f'balance - {amount}')
-            }).eq('id', account_id).execute()
+            new_balance = current_balance - amount
+        else:
+            new_balance = current_balance
+        
+        # Update the account balance
+        supabase.table('accounts').update({
+            'balance': new_balance
+        }).eq('id', account_id).execute()
         
         logger.info(f"Added {transaction_type} transaction: {amount}")
         return redirect('/')
