@@ -299,7 +299,7 @@ def add_transaction():
         description = request.form.get('description', '')
         
         print(f"account_id: {account_id}, transaction_type: {transaction_type}, amount: {amount}, description: {description}")
-        if not all([account_id, transaction_type, amount]):
+        if account_id is None or transaction_type is None or amount is None:
             return jsonify({'error': 'Missing required fields'}), 400
         
         # Start a transaction (will need to update both transactions and account balance)
