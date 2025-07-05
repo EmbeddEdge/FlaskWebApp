@@ -298,6 +298,7 @@ def add_transaction():
         amount = float(request.form.get('amount', 0))
         description = request.form.get('description', '')
         
+        print(f"account_id: {account_id}, transaction_type: {transaction_type}, amount: {amount}, description: {description}")
         if not all([account_id, transaction_type, amount]):
             return jsonify({'error': 'Missing required fields'}), 400
         
