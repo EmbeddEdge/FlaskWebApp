@@ -48,6 +48,45 @@ def index():
     except Exception as e:
         logger.error(f"Error fetching data from database: {e}")
         return render_template('error.html', error_message="Could not fetch data from the database.")
+    
+@app.route('/transactions/add', methods=['POST'])
+def add_transaction():
+    """
+    Record a new transaction (income, expense, or transfer)
+    """
+    try:
+        account_id = request.form.get('account_id')
+        transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
+        amount = float(request.form.get('amount', 0))
+        description = request.form.get('description', '')
+        
+        if not all([account_id, transaction_type, amount]):
+            return jsonify({'error': 'Missing required fields'}), 400
+        
+        # Start a transaction (will need to update both transactions and account balance)
+        response = supabase.table('transactions').insert({
+            'account_id': account_id,
+            'type': transaction_type,
+            'amount': amount,
+            'description': description
+        }).execute()
+        
+        # Update account balance
+        if transaction_type == 'income':
+            supabase.table('accounts').update({
+                'balance': supabase.raw(f'balance + {amount}')
+            }).eq('id', account_id).execute()
+        elif transaction_type == 'expense':
+            supabase.table('accounts').update({
+                'balance': supabase.raw(f'balance - {amount}')
+            }).eq('id', account_id).execute()
+        
+        logger.info(f"Added {transaction_type} transaction: {amount}")
+        return redirect('/')
+        
+    except Exception as e:
+        logger.error(f"Error adding transaction: {e}")
+        return jsonify({'error': 'Failed to add transaction'}), 50
 
 @app.route("/home")
 def home():
