@@ -115,6 +115,10 @@ def home():
     mountains = ['Everest', 'K2', 'Kilimanjaro', 'Lhotse', 'Makalu', 'Seven', 'Five']
     return render_template('index1.html', mountain = mountains)
 
+@app.route("/account/setup")
+def account_setup():
+    return render_template('accountsetup.html')
+
 @app.route("/mountain/<mt>")
 def mountain(mt):
     return "This is the mountain page for " + mt
