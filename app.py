@@ -2,6 +2,7 @@
 import os
 import psycopg2, psycopg2.extras
 from flask import Flask, render_template, request, url_for, redirect, jsonify
+from decimal import Decimal
 import logging
 
 # Configure logging
@@ -58,7 +59,7 @@ def add_transaction():
         #account_id = request.form.get('account_id')
         account_id = 1 # Placeholder for account ID, should be set based on user context
         transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
-        amount = float(request.form.get('amount', 0))
+        amount = Decimal(request.form.get('amount', 0))
         description = request.form.get('description', '')
         
         if account_id is None or transaction_type is None or amount is None:
