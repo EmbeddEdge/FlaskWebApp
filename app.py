@@ -76,13 +76,14 @@ def add_transaction():
                 account_balance = cur.fetchone()
                 if account_balance is None:
                     return jsonify({'error': 'Account not found'}), 404
+                balance = account_balance[0]
                 # Calculate new balance
                 if transaction_type == 'income':
-                    new_balance = account_balance + amount
+                    new_balance = balance + amount
                 elif transaction_type == 'expense':
-                    new_balance = account_balance - amount
+                    new_balance = balance - amount
                 else:
-                    new_balance = account_balance
+                    new_balance = balance
                 # Update the account balance
                 cur.execute(
                     'UPDATE accounts SET balance = %s WHERE user_id = %s',
