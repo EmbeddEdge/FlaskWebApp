@@ -52,7 +52,7 @@
                                         Current Balance
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ "%.2f"|format(accounts[1]['balance'] if accounts else 5) }}
+                                        R{{ "%.2f"|format(accounts['balance'] if accounts else 5) }}
                                     </dd>
                                 </dl>
                             </div>
@@ -73,7 +73,7 @@
                                         Monthly Income
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ "%.2f"|format(accounts[1].monthly_income if accounts else 0) }}
+                                        R{{ "%.2f"|format(accounts.monthly_income if accounts else 0) }}
                                     </dd>
                                 </dl>
                             </div>
@@ -94,7 +94,7 @@
                                         Monthly Expenses
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ "%.2f"|format(accounts[1].monthly_expense if accounts else 0) }}
+                                        R{{ "%.2f"|format(accounts.monthly_expense if accounts else 0) }}
                                     </dd>
                                 </dl>
                             </div>

@@ -23,8 +23,8 @@ def index():
     try:
         with get_db_connection() as conn:
             with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:    
-                cur.execute('SELECT * FROM accounts;')
-                accounts = cur.fetchall()
+                cur.execute('SELECT balance, monthly_income, monthly_expense FROM accounts WHERE user_id=1;')
+                accounts = cur.fetchone()
                 cur.execute('SELECT * FROM transactions;')
                 transactions = cur.fetchall()
         
@@ -35,8 +35,8 @@ def index():
         # Calculate savings recommendations if we have account data
         savings_recommendation = None
         if accounts:
-            monthly_income = accounts[0].get('monthly_income', 0)
-            current_savings = accounts[0].get('balance', 0)
+            monthly_income = accounts.get('monthly_income', 0)
+            current_savings = accounts.get('balance', 0)
             savings_recommendation = calculate_savings_recommendation(monthly_income, current_savings)
     
         logger.info(f"Accounts: {accounts}")
