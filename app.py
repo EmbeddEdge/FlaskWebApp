@@ -68,7 +68,7 @@ def add_transaction():
         with get_db_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    'INSERT INTO transactions (id, type, amount, description) VALUES (%s, %s, %s, %s)',
+                    'INSERT INTO transactions (account_id, type, amount, description) VALUES (%s, %s, %s, %s)',
                     (account_id, transaction_type, amount, description)
                 )
                 # Fetch the current balance
