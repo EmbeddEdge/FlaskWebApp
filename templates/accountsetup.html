@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Setup</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .dark-mode {
+            background-color: #18181b !important;
+            color: #f3f4f6 !important;
+        }
+        .dark-mode .bg-white { background-color: #27272a !important; }
+        .dark-mode .text-gray-900 { color: #f3f4f6 !important; }
+        .dark-mode .text-gray-700 { color: #d1d5db !important; }
+        .dark-mode .text-gray-500 { color: #9ca3af !important; }
+        .dark-mode .bg-gray-100 { background-color: #18181b !important; }
+        .dark-mode input, .dark-mode select, .dark-mode textarea {
+            background-color: #27272a !important;
+            color: #f3f4f6 !important;
+            border-color: #52525b !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center" id="body">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold mb-6 text-gray-900">Account Setup</h2>
+        <form action="/account/setup" method="POST">
+            <div class="mb-4">
+                <label for="balance" class="block text-gray-700 text-sm font-bold mb-2">Opening Balance</label>
+                <input type="number" step="0.01" name="balance" id="balance" placeholder="Enter opening balance" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="flex items-center justify-between">
+                <a href="/" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</a>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
+            </div>
+        </form>
+    </div>
+    <div class="fixed top-4 right-4 z-50">
+        <button id="darkModeToggle" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 focus:outline-none">
+            <i class="fas fa-moon"></i> <span id="darkModeText">Dark Mode</span>
+        </button>
+    </div>
+    <script>
+    (function() {
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.getElementById('body');
+        const darkModeText = document.getElementById('darkModeText');
+        let darkMode = false;
+        darkModeToggle.addEventListener('click', function() {
+            darkMode = !darkMode;
+            if (darkMode) {
+                body.classList.add('dark-mode');
+                darkModeText.textContent = 'Light Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-moon');
+                darkModeToggle.querySelector('i').classList.add('fa-sun');
+            } else {
+                body.classList.remove('dark-mode');
+                darkModeText.textContent = 'Dark Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-sun');
+                darkModeToggle.querySelector('i').classList.add('fa-moon');
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Setup</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .dark-mode {
+            background-color: #18181b !important;
+            color: #f3f4f6 !important;
+        }
+        .dark-mode .bg-white { background-color: #27272a !important; }
+        .dark-mode .text-gray-900 { color: #f3f4f6 !important; }
+        .dark-mode .text-gray-700 { color: #d1d5db !important; }
+        .dark-mode .text-gray-500 { color: #9ca3af !important; }
+        .dark-mode input, .dark-mode select, .dark-mode textarea {
+            background-color: #27272a !important;
+            color: #f3f4f6 !important;
+            border-color: #52525b !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center" id="body">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-blue-700 mb-6 flex items-center">
+            <i class="fas fa-user-cog mr-2"></i> Account Setup
+        </h2>
+        <form action="/account/setup" method="POST" class="space-y-6">
+            <div>
+                <label for="balance" class="block text-gray-700 font-semibold mb-2">Opening Balance</label>
+                <input type="number" step="0.01" name="balance" id="balance" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                       value="{{ accounts.balance if accounts else '' }}">
+            </div>
+            <div class="flex items-center justify-between">
+                <a href="/" class="text-blue-500 hover:underline">&larr; Back to Dashboard</a>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Save
+                </button>
+            </div>
+        </form>
+        {% if error_message %}
+        <div class="mt-4 text-red-600 font-semibold">
+            {{ error_message }}
+        </div>
+        {% endif %}
+        {% if success_message %}
+        <div class="mt-4 text-green-600 font-semibold">
+            {{ success_message }}
+        </div>
+        {% endif %}
+    </div>
+    <!-- Dark Mode Toggle Button -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="darkModeToggle" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 focus:outline-none">
+            <i class="fas fa-moon"></i> <span id="darkModeText">Dark Mode</span>
+        </button>
+    </div>
+    <script>
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.getElementById('body');
+        const darkModeText = document.getElementById('darkModeText');
+        let darkMode = false;
+        darkModeToggle.addEventListener('click', function() {
+            darkMode = !darkMode;
+            if (darkMode) {
+                body.classList.add('dark-mode');
+                darkModeText.textContent = 'Light Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-moon');
+                darkModeToggle.querySelector('i').classList.add('fa-sun');
+            } else {
+                body.classList.remove('dark-mode');
+                darkModeText.textContent = 'Dark Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-sun');
+                darkModeToggle.querySelector('i').classList.add('fa-moon');
+            }
+        });
+    </script>
+</body>
+</html>
