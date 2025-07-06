@@ -7,8 +7,37 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .dark-mode {
+            background-color: #18181b !important;
+            color: #f3f4f6 !important;
+        }
+        .dark-mode .bg-white { background-color: #27272a !important; }
+        .dark-mode .text-gray-900 { color: #f3f4f6 !important; }
+        .dark-mode .text-gray-700 { color: #d1d5db !important; }
+        .dark-mode .text-gray-500 { color: #9ca3af !important; }
+        .dark-mode .bg-gray-100 { background-color: #18181b !important; }
+        .dark-mode .bg-blue-100 { background-color: #1e293b !important; }
+        .dark-mode .bg-blue-200 { background-color: #334155 !important; }
+        .dark-mode .bg-red-100 { background-color: #7f1d1d !important; }
+        .dark-mode .bg-green-100 { background-color: #14532d !important; }
+        .dark-mode .bg-gray-50 { background-color: #27272a !important; }
+        .dark-mode .bg-gray-600 { background-color: #18181b !important; }
+        .dark-mode .shadow-lg, .dark-mode .shadow { box-shadow: 0 2px 8px 0 rgba(0,0,0,0.7)!important; }
+        .dark-mode input, .dark-mode select, .dark-mode textarea {
+            background-color: #27272a !important;
+            color: #f3f4f6 !important;
+            border-color: #52525b !important;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100" id="body">
+    <!-- Dark Mode Toggle Button -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="darkModeToggle" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 focus:outline-none">
+            <i class="fas fa-moon"></i> <span id="darkModeText">Dark Mode</span>
+        </button>
+    </div>
     <!-- Side Panel Navigation -->
     <div class="flex min-h-screen">
         <!-- Sidebar -->
@@ -333,6 +362,26 @@
         function closeAddGoalModal() {
             document.getElementById('addGoalModal').classList.add('hidden');
         }
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.getElementById('body');
+        const darkModeText = document.getElementById('darkModeText');
+        let darkMode = false;
+        darkModeToggle.addEventListener('click', function() {
+            darkMode = !darkMode;
+            if (darkMode) {
+                body.classList.add('dark-mode');
+                darkModeText.textContent = 'Light Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-moon');
+                darkModeToggle.querySelector('i').classList.add('fa-sun');
+            } else {
+                body.classList.remove('dark-mode');
+                darkModeText.textContent = 'Dark Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-sun');
+                darkModeToggle.querySelector('i').classList.add('fa-moon');
+            }
+        });
     </script>
 </body>
 </html>
