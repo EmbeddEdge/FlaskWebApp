@@ -1,7 +1,7 @@
 # Secondary Account Finance Pi Hosted Flask app with local PostgreSQL database
 import os
 import psycopg2, psycopg2.extras
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, jsonify
 import logging
 
 # Configure logging
@@ -55,38 +55,58 @@ def add_transaction():
     Record a new transaction (income, expense, or transfer)
     """
     try:
-        account_id = request.form.get('account_id')
+        #account_id = request.form.get('account_id')
+        account_id = 1 # Placeholder for account ID, should be set based on user context
         transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
         amount = float(request.form.get('amount', 0))
         description = request.form.get('description', '')
         
-        if not all([account_id, transaction_type, amount]):
+        if account_id is None or transaction_type is None or amount is None:
             return jsonify({'error': 'Missing required fields'}), 400
         
-        # Start a transaction (will need to update both transactions and account balance)
-        response = supabase.table('transactions').insert({
-            'account_id': account_id,
-            'type': transaction_type,
-            'amount': amount,
-            'description': description
-        }).execute()
-        
-        # Update account balance
+        # Start a transaction: insert into transactions table using local PostgreSQL
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    'INSERT INTO transactions (id, type, amount, description) VALUES (%s, %s, %s, %s)',
+                    (account_id, transaction_type, amount, description)
+                )
+                # Fetch the current balance
+                cur.execute('SELECT balance FROM accounts WHERE id = %s', (account_id,))
+                account_balance = cur.fetchone()
+                if account_balance is None:
+                    return jsonify({'error': 'Account not found'}), 404
+                # Calculate new balance
+                if transaction_type == 'income':
+                    new_balance = account_balance['balance'] + amount
+                elif transaction_type == 'expense':
+                    new_balance = current_balance - amount
+                else:
+                    new_balance = current_balance
+                # Update the account balance
+                cur.execute(
+                    'UPDATE accounts SET balance = %s WHERE id = %s',
+                    (new_balance, account_id)
+                )
+                # Commit the transaction
+                conn.commit() 
+       
+        # Log the transaction
         if transaction_type == 'income':
-            supabase.table('accounts').update({
-                'balance': supabase.raw(f'balance + {amount}')
-            }).eq('id', account_id).execute()
+            logger.info(f"Added income transaction: {amount}")
         elif transaction_type == 'expense':
-            supabase.table('accounts').update({
-                'balance': supabase.raw(f'balance - {amount}')
-            }).eq('id', account_id).execute()
+            logger.info(f"Added expense transaction: {amount}")
+        elif transaction_type == 'transfer':
+            logger.info(f"Added transfer transaction: {amount}")
+        else:
+            logger.warning(f"Unknown transaction type: {transaction_type}")
         
         logger.info(f"Added {transaction_type} transaction: {amount}")
         return redirect('/')
         
     except Exception as e:
         logger.error(f"Error adding transaction: {e}")
-        return jsonify({'error': 'Failed to add transaction'}), 50
+        return jsonify({'error': 'Failed to add transaction'}), 500
 
 @app.route("/home")
 def home():
