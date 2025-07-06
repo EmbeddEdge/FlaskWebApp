@@ -115,13 +115,43 @@ def home():
     mountains = ['Everest', 'K2', 'Kilimanjaro', 'Lhotse', 'Makalu', 'Seven', 'Five']
     return render_template('index1.html', mountain = mountains)
 
-@app.route("/account/setup")
-def account_setup():
-    return render_template('accountsetup.html')
-
 @app.route("/mountain/<mt>")
 def mountain(mt):
     return "This is the mountain page for " + mt
+
+
+# Account setup: edit opening balance
+@app.route('/account/setup', methods=['GET', 'POST'])
+def account_setup():
+    account_id = 1  # Placeholder for user/account context
+    error_message = None
+    success_message = None
+    if request.method == 'POST':
+        try:
+            balance = request.form.get('balance')
+            if balance is None or balance == '':
+                error_message = 'Balance is required.'
+            else:
+                balance = Decimal(balance)
+                with get_db_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute('UPDATE accounts SET balance = %s WHERE user_id = %s', (balance, account_id))
+                        conn.commit()
+                success_message = 'Opening balance updated successfully.'
+        except Exception as e:
+            logger.error(f"Error updating opening balance: {e}")
+            error_message = 'Failed to update opening balance.'
+    # Always fetch current account info for display
+    accounts = None
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                cur.execute('SELECT balance FROM accounts WHERE user_id = %s', (account_id,))
+                accounts = cur.fetchone()
+    except Exception as e:
+        logger.error(f"Error fetching account for setup: {e}")
+        error_message = 'Could not fetch account information.'
+    return render_template('accountsetup.html', accounts=accounts, error_message=error_message, success_message=success_message)
 
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
