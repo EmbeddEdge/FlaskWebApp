@@ -85,7 +85,7 @@ def add_transaction():
                     new_balance = account_balance
                 # Update the account balance
                 cur.execute(
-                    'UPDATE accounts SET balance = %s WHERE account_id = %s',
+                    'UPDATE accounts SET balance = %s WHERE user_id = %s',
                     (new_balance, account_id)
                 )
                 # Commit the transaction
