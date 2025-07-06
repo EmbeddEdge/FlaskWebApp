@@ -72,7 +72,7 @@ def add_transaction():
                     (account_id, transaction_type, amount, description)
                 )
                 # Fetch the current balance
-                cur.execute('SELECT balance FROM accounts WHERE id = %s', (account_id,))
+                cur.execute('SELECT balance FROM accounts WHERE account_id = %s', (account_id,))
                 account_balance = cur.fetchone()
                 if account_balance is None:
                     return jsonify({'error': 'Account not found'}), 404
@@ -85,7 +85,7 @@ def add_transaction():
                     new_balance = account_balance
                 # Update the account balance
                 cur.execute(
-                    'UPDATE accounts SET balance = %s WHERE id = %s',
+                    'UPDATE accounts SET balance = %s WHERE account_id = %s',
                     (new_balance, account_id)
                 )
                 # Commit the transaction
