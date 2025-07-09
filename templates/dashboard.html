@@ -8,26 +8,90 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* Brown Cookie/Baking Theme */
+        body {
+            background-color: #f5ede3;
+        }
+        .bg-white {
+            background-color: #f8f5f2 !important;
+        }
+        .text-gray-900 {
+            color: #5c4033 !important;
+        }
+        .text-gray-700 {
+            color: #7c5e3c !important;
+        }
+        .text-gray-500 {
+            color: #a58a6a !important;
+        }
+        .bg-gray-100 {
+            background-color: #f5ede3 !important;
+        }
+        .bg-blue-100, .bg-blue-200 {
+            background-color: #e2c9b0 !important;
+        }
+        .bg-red-100 {
+            background-color: #b86b4b !important;
+        }
+        .bg-green-100 {
+            background-color: #a3a656 !important;
+        }
+        .bg-gray-50 {
+            background-color: #f8f5f2 !important;
+        }
+        .bg-gray-600 {
+            background-color: #a58a6a !important;
+        }
+        .shadow-lg, .shadow {
+            box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.15)!important;
+        }
+        input, select, textarea {
+            background-color: #f8f5f2 !important;
+            color: #5c4033 !important;
+            border-color: #a58a6a !important;
+        }
+        th.type-col, td.type-col, .type-col span {
+            color: #fff !important;
+        }
+        /* Top nav bar gradient for cookie theme */
+        .cookie-navbar {
+            background: linear-gradient(90deg, #a97142 0%, #f5c16c 100%);
+            box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.07);
+        }
+        .cookie-btn {
+            background-color: #a97142 !important;
+            color: #fff !important;
+        }
+        .cookie-btn:hover {
+            background-color: #7c5e3c !important;
+        }
+        .cookie-secondary-btn {
+            background-color: #f5c16c !important;
+            color: #5c4033 !important;
+        }
+        .cookie-secondary-btn:hover {
+            background-color: #e2c9b0 !important;
+        }
+    /* Dark mode overrides for brown theme */
         .dark-mode {
-            background-color: #18181b !important;
+            background-color: #3e2723 !important;
             color: #f3f4f6 !important;
         }
-        .dark-mode .bg-white { background-color: #27272a !important; }
+        .dark-mode .bg-white { background-color: #5c4033 !important; }
         .dark-mode .text-gray-900 { color: #f3f4f6 !important; }
-        .dark-mode .text-gray-700 { color: #d1d5db !important; }
-        .dark-mode .text-gray-500 { color: #9ca3af !important; }
-        .dark-mode .bg-gray-100 { background-color: #18181b !important; }
-        .dark-mode .bg-blue-100 { background-color: #1e293b !important; }
-        .dark-mode .bg-blue-200 { background-color: #334155 !important; }
-        .dark-mode .bg-red-100 { background-color: #7f1d1d !important; }
-        .dark-mode .bg-green-100 { background-color: #14532d !important; }
-        .dark-mode .bg-gray-50 { background-color: #27272a !important; }
-        .dark-mode .bg-gray-600 { background-color: #18181b !important; }
+        .dark-mode .text-gray-700 { color: #e2c9b0 !important; }
+        .dark-mode .text-gray-500 { color: #f5c16c !important; }
+        .dark-mode .bg-gray-100 { background-color: #3e2723 !important; }
+        .dark-mode .bg-blue-100, .dark-mode .bg-blue-200 { background-color: #a97142 !important; }
+        .dark-mode .bg-red-100 { background-color: #b86b4b !important; }
+        .dark-mode .bg-green-100 { background-color: #a3a656 !important; }
+        .dark-mode .bg-gray-50 { background-color: #5c4033 !important; }
+        .dark-mode .bg-gray-600 { background-color: #a58a6a !important; }
         .dark-mode .shadow-lg, .dark-mode .shadow { box-shadow: 0 2px 8px 0 rgba(0,0,0,0.7)!important; }
         .dark-mode input, .dark-mode select, .dark-mode textarea {
-            background-color: #27272a !important;
+            background-color: #5c4033 !important;
             color: #f3f4f6 !important;
-            border-color: #52525b !important;
+            border-color: #f5c16c !important;
         }
         .dark-mode th.type-col, .dark-mode td.type-col, .dark-mode .type-col span {
             color: #fff !important;
@@ -35,21 +99,23 @@
     </style>
 </head>
 <body class="bg-gray-100" id="body">
-    <!-- Top Header Navigation with Logo -->
-    <div class="fixed top-4 left-4 z-50 flex items-center space-x-4">
-        <!-- Logo -->
-        <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-20 w-20 object-contain rounded-full shadow border-2 border-white" />
-    </div>
-    <div class="fixed top-4 right-4 z-50 flex items-center space-x-2">
-        <button id="reportsBtn" class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded shadow focus:outline-none flex items-center">
-            <i class="fas fa-chart-line mr-2"></i> Reports
-        </button>
-        <button id="languageBtn" class="bg-gray-600 hover:bg-gray-800 text-white px-4 py-2 rounded shadow focus:outline-none flex items-center">
-            <i class="fas fa-language mr-2"></i> Language
-        </button>
-        <button id="darkModeToggle" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 focus:outline-none flex items-center">
-            <i class="fas fa-moon"></i> <span id="darkModeText" class="ml-2">Dark Mode</span>
-        </button>
+    <!-- Top Header Navigation with Logo and Colored Bar -->
+    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-2 cookie-navbar">
+        <div class="flex items-center space-x-4">
+            <!-- Logo -->
+            <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-20 w-20 object-contain rounded-full shadow" />
+        </div>
+        <div class="flex items-center space-x-2">
+            <button id="reportsBtn" class="cookie-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
+                <i class="fas fa-chart-line mr-2"></i> Reports
+            </button>
+            <button id="languageBtn" class="cookie-secondary-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
+                <i class="fas fa-language mr-2"></i> Language
+            </button>
+            <button id="darkModeToggle" class="cookie-btn px-4 py-2 rounded shadow hover:bg-yellow-700 focus:outline-none flex items-center">
+                <i class="fas fa-moon"></i> <span id="darkModeText" class="ml-2">Dark Mode</span>
+            </button>
+        </div>
     </div>
     <!-- Side Panel Navigation -->
     <div class="flex min-h-screen">
