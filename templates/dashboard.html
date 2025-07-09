@@ -55,12 +55,15 @@
         }
         /* Top nav bar gradient for cookie theme */
         .cookie-navbar {
-            background: linear-gradient(90deg, #a97142 0%, #f5c16c 100%);
+            background: linear-gradient(90deg, #f5c16c 0%, #a97142 100%);
             box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.07);
         }
         .cookie-btn {
             background-color: #a97142 !important;
             color: #fff !important;
+            font-size: 0.85rem !important;
+            padding: 0.25rem 0.75rem !important;
+            min-height: 28px !important;
         }
         /* Remove logo border in all modes */
         .cookie-navbar img[alt="Krumble Korner Logo"] {
@@ -80,6 +83,9 @@
         .cookie-secondary-btn {
             background-color: #f5c16c !important;
             color: #5c4033 !important;
+            font-size: 0.85rem !important;
+            padding: 0.25rem 0.75rem !important;
+            min-height: 28px !important;
         }
         .cookie-secondary-btn:hover {
             background-color: #e2c9b0 !important;
@@ -112,10 +118,10 @@
 </head>
 <body class="bg-gray-100" id="body">
     <!-- Top Header Navigation with Logo and Colored Bar -->
-    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-1 cookie-navbar" style="min-height: 56px;">
+    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-0.5 cookie-navbar" style="min-height: 32px;">
         <div class="flex items-center space-x-4">
             <!-- Logo -->
-            <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-20 w-20 object-contain rounded-full shadow" />
+            <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-12 w-12 object-contain rounded-full shadow" />
         </div>
         <div class="flex items-center space-x-2">
             <button id="reportsBtn" class="cookie-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
