@@ -141,6 +141,19 @@ def account_setup():
         except Exception as e:
             logger.error(f"Error updating opening balance: {e}")
             error_message = 'Failed to update opening balance.'
+        try:
+            start_month = request.form.get('start_month')
+            if start_month is None or start_month == '':
+                error_message = 'Start month is required.'
+            else:
+                with get_db_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute('UPDATE accounts SET start_month = %s WHERE user_id = %s', (start_month, account_id))
+                        conn.commit()
+                success_message = 'Start month updated successfully.'
+        except Exception as e:
+            logger.error(f"Error updating start month: {e}")
+            error_message = 'Failed to update start month.'
     # Always fetch current account info for display
     accounts = None
     try:

@@ -181,6 +181,12 @@
         </h2>
         <form action="/account/setup" method="POST" class="space-y-6">
             <div>
+                <label for="start_month" class="block text-gray-700 font-semibold mb-2">Start Month</label>
+                <input type="text" name="start_month" id="start_month" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                       value="{{ accounts.start_month if accounts else '' }}">
+            </div>
+            <div>
                 <label for="balance" class="block text-gray-700 font-semibold mb-2">Opening Balance</label>
                 <input type="number" step="0.01" name="balance" id="balance" required
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
