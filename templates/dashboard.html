@@ -55,7 +55,7 @@
         }
         /* Top nav bar gradient for cookie theme */
         .cookie-navbar {
-            background: linear-gradient(90deg, #a97142 0%, #f5c16c 100%);
+            background: linear-gradient(180deg, #a97142 0%, #f5c16c 100%);
             box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.07);
         }
         .cookie-btn {
@@ -100,7 +100,7 @@
 </head>
 <body class="bg-gray-100" id="body">
     <!-- Top Header Navigation with Logo and Colored Bar -->
-    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-2 cookie-navbar">
+    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-1 cookie-navbar" style="min-height: 56px;">
         <div class="flex items-center space-x-4">
             <!-- Logo -->
             <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-20 w-20 object-contain rounded-full shadow" />
