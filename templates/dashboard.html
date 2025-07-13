@@ -122,7 +122,6 @@
         <div class="flex items-center space-x-4">
             <!-- Logo -->
             <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-28 w-28 object-contain rounded-full shadow -my-3" style="min-height: 64px; min-width: 64px;" />
-            <h2 class="text-2xl font-semibold text-gray-900">Secondary Account Tracker - Pi Version</h2>
         </div>
         <div class="flex items-center space-x-2">
             <button id="reportsBtn" class="cookie-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
@@ -144,28 +143,18 @@
             <div style="height: 96px;"></div>
             <div class="mb-8">
                 <nav class="flex flex-col space-y-2">
-                    <a href="/" class="flex items-center px-3 py-2 rounded-lg text-gray-700 font-medium sidebar-btn">
+                    <a href="/" class="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-blue-100 hover:text-blue-700 font-medium">
                         <i class="fas fa-tachometer-alt mr-2"></i> Overview Dashboard
                     </a>
-                    <a href="/account/setup" class="flex items-center px-3 py-2 rounded-lg text-gray-700 font-medium sidebar-btn">
+                    <a href="/account/setup" class="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-blue-100 hover:text-blue-700 font-medium">
                         <i class="fas fa-user-cog mr-2"></i> Account Setup
                     </a>
                 </nav>
             </div>
             <div class="mt-auto">
-                <a href="#" class="flex items-center px-3 py-2 rounded-lg text-gray-500 font-medium sidebar-btn">
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 font-medium">
                     <i class="fas fa-cog mr-2"></i> Settings
                 </a>
-        /* Sidebar button hover highlight (cookie theme) */
-        .sidebar-btn {
-            background-color: transparent !important;
-            color: #7c5e3c !important;
-            transition: background 0.2s, color 0.2s;
-        }
-        .sidebar-btn:hover {
-            background-color: #f5c16c !important;
-            color: #7c5e3c !important;
-        }
             </div>
         </aside>
         <!-- Main Content Wrapper -->
