@@ -7,37 +7,200 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Sidebar button hover highlight (cookie theme) */
+        .sidebar-btn {
+            background-color: transparent !important;
+            color: #7c5e3c !important;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-btn:hover {
+            background-color: #f5c16c !important;
+            color: #7c5e3c !important;
+        }
+        /* Brown Cookie/Baking Theme */
+        body {
+            background-color: #f5ede3;
+        }
+        .bg-white {
+            background-color: #f8f5f2 !important;
+        }
+        .text-gray-900 {
+            color: #5c4033 !important;
+        }
+        .text-gray-700 {
+            color: #7c5e3c !important;
+        }
+        .text-gray-500 {
+            color: #a58a6a !important;
+        }
+        .bg-gray-100 {
+            background-color: #f5ede3 !important;
+        }
+        .bg-blue-100, .bg-blue-200 {
+            background-color: #e2c9b0 !important;
+        }
+        .bg-red-100 {
+            background-color: #b86b4b !important;
+        }
+        .bg-green-100 {
+            background-color: #a3a656 !important;
+        }
+        .bg-gray-50 {
+            background-color: #f8f5f2 !important;
+        }
+        .bg-gray-600 {
+            background-color: #a58a6a !important;
+        }
+        .shadow-lg, .shadow {
+            box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.15)!important;
+        }
+        input, select, textarea {
+            background-color: #f8f5f2 !important;
+            color: #5c4033 !important;
+            border-color: #a58a6a !important;
+        }
+        th.type-col, td.type-col, .type-col span {
+            color: #fff !important;
+        }
+        /* Top nav bar gradient for cookie theme */
+        .cookie-navbar {
+            background: linear-gradient(90deg, #f5c16c 0%, #a97142 100%);
+            box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.07);
+        }
+        .cookie-btn {
+            background-color: #a97142 !important;
+            color: #fff !important;
+            font-size: 0.85rem !important;
+            padding: 0.25rem 0.75rem !important;
+            min-height: 28px !important;
+        }
+        /* Remove logo border in all modes */
+        .cookie-navbar img[alt="Krumble Korner Logo"] {
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+        /* Remove logo border in dark mode specifically */
+        .dark-mode .cookie-navbar img[alt="Krumble Korner Logo"] {
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+        .cookie-btn:hover {
+            background-color: #7c5e3c !important;
+        }
+        .cookie-secondary-btn {
+            background-color: #f5c16c !important;
+            color: #5c4033 !important;
+            font-size: 0.85rem !important;
+            padding: 0.25rem 0.75rem !important;
+            min-height: 28px !important;
+        }
+        .cookie-secondary-btn:hover {
+            background-color: #e2c9b0 !important;
+        }
+    /* Dark mode overrides for brown theme */
+        .dark-mode {
+            background-color: #3e2723 !important;
+            color: #f3f4f6 !important;
+        }
+        .dark-mode .bg-white { background-color: #5c4033 !important; }
+        .dark-mode .text-gray-900 { color: #f3f4f6 !important; }
+        .dark-mode .text-gray-700 { color: #e2c9b0 !important; }
+        .dark-mode .text-gray-500 { color: #f5c16c !important; }
+        .dark-mode .bg-gray-100 { background-color: #3e2723 !important; }
+        .dark-mode .bg-blue-100, .dark-mode .bg-blue-200 { background-color: #a97142 !important; }
+        .dark-mode .bg-red-100 { background-color: #b86b4b !important; }
+        .dark-mode .bg-green-100 { background-color: #a3a656 !important; }
+        .dark-mode .bg-gray-50 { background-color: #5c4033 !important; }
+        .dark-mode .bg-gray-600 { background-color: #a58a6a !important; }
+        .dark-mode .shadow-lg, .dark-mode .shadow { box-shadow: 0 2px 8px 0 rgba(0,0,0,0.7)!important; }
+        .dark-mode input, .dark-mode select, .dark-mode textarea {
+            background-color: #5c4033 !important;
+            color: #f3f4f6 !important;
+            border-color: #f5c16c !important;
+        }
+        .dark-mode th.type-col, .dark-mode td.type-col, .dark-mode .type-col span {
+            color: #fff !important;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16">
-                <div class="flex">
-                    <div class="flex-shrink-0 flex items-center">
-                        <h1 class="text-xl font-bold">Secondary Account Tracker</h1>
+<body class="bg-gray-100" id="body">
+    <!-- Top Header Navigation with Logo and Colored Bar -->
+    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-0.5 cookie-navbar" style="min-height: 32px;">
+        <div class="flex items-center space-x-4">
+            <!-- Logo -->
+            <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-28 w-28 object-contain rounded-full shadow -my-3" style="min-height: 64px; min-width: 64px;" />
+            <h2 class="text-xl font-bold" style="color: #5c4033;">Secondary Account Tracker - Pi Version</h2>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button id="reportsBtn" class="cookie-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
+                <i class="fas fa-chart-line mr-2"></i> Reports
+            </button>
+            <button id="languageBtn" class="cookie-secondary-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
+                <i class="fas fa-language mr-2"></i> Language
+            </button>
+            <button id="darkModeToggle" class="cookie-btn px-4 py-2 rounded shadow hover:bg-yellow-700 focus:outline-none flex items-center">
+                <i class="fas fa-moon"></i> <span id="darkModeText" class="ml-2">Dark Mode</span>
+            </button>
+        </div>
+    </div>
+    <!-- Side Panel Navigation -->
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg flex flex-col py-6 px-4">
+            <!-- Spacer to push items below the logo -->
+            <div style="height: 96px;"></div>
+            <div class="mb-8">
+                <nav class="flex flex-col space-y-2">
+                    <a href="/" class="flex items-center px-3 py-2 rounded-lg text-gray-700 font-medium sidebar-btn">
+                        <i class="fas fa-tachometer-alt mr-2"></i> Overview Dashboard
+                    </a>
+                    <a href="/account/setup" class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
+                        <i class="fas fa-user-cog mr-2"></i> Account Setup
+                    </a>
+                </nav>
+            </div>
+            <div class="mt-auto">
+                <a href="#" class="flex items-center px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 font-medium">
+                    <i class="fas fa-cog mr-2"></i> Settings
+                </a>
+            </div>
+        </aside>
+        <!-- Main Content Wrapper -->
+        <div class="flex-1">
+            <!-- Top Navigation (optional, can be removed if not needed) -->
+            <!--
+            <nav class="bg-white shadow-lg">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="flex justify-between h-16">
+                        <div class="flex">
+                            <div class="flex-shrink-0 flex items-center">
+                                <h1 class="text-xl font-bold">Secondary Account Tracker - Pi Version</h1>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <a href="#" class="text-gray-600 hover:text-blue-500">
+                                <i class="fas fa-home"></i> Dashboard
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-blue-500">
+                                <i class="fas fa-chart-line"></i> Reports
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-blue-500">
+                                <i class="fas fa-cog"></i> Settings
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <a href="#" class="text-gray-600 hover:text-blue-500">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
-                    <a href="#" class="text-gray-600 hover:text-blue-500">
-                        <i class="fas fa-chart-line"></i> Reports
-                    </a>
-                    <a href="#" class="text-gray-600 hover:text-blue-500">
-                        <i class="fas fa-cog"></i> Settings
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+            </nav>
+            -->
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <!-- Account Overview -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900">Account Overview</h2>
+        <!-- Account Overview (moved down for logo spacing) -->
+        <div class="mb-8" style="margin-top: 4.5rem;">
+            
             <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 <!-- Current Balance -->
                 <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -52,7 +215,7 @@
                                         Current Balance
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ "%.2f"|format(accounts[-1]['balance'] if accounts else 5) }}
+                                        R{{ "%.2f"|format(accounts['balance'] if accounts else 5) }}
                                     </dd>
                                 </dl>
                             </div>
@@ -73,7 +236,7 @@
                                         Monthly Income
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ "%.2f"|format(accounts[-1].monthly_income if accounts else 0) }}
+                                        R{{ "%.2f"|format(accounts.monthly_income if accounts else 0) }}
                                     </dd>
                                 </dl>
                             </div>
@@ -94,7 +257,7 @@
                                         Monthly Expenses
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ "%.2f"|format(accounts[-1].monthly_expense if accounts else 0) }}
+                                        R{{ "%.2f"|format(accounts.monthly_expense if accounts else 0) }}
                                     </dd>
                                 </dl>
                             </div>
@@ -108,7 +271,7 @@
         <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold text-gray-900">Savings Goals</h2>
-                <button onclick="openAddGoalModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <button onclick="openAddGoalModal()" class="cookie-btn font-bold py-2 px-4 rounded">
                     <i class="fas fa-plus"></i> Add Goal
                 </button>
             </div>
@@ -157,7 +320,7 @@
         <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold text-gray-900">Recent Transactions</h2>
-                <button onclick="openAddTransactionModal()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                <button onclick="openAddTransactionModal()" class="cookie-secondary-btn font-bold py-2 px-4 rounded">
                     <i class="fas fa-plus"></i> Add Transaction
                 </button>
             </div>
@@ -167,7 +330,7 @@
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-col">Type</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                         </tr>
                     </thead>
@@ -180,7 +343,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ transaction.description }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 type-col">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     {% if transaction.type == 'income' %}bg-green-100 text-green-800
                                     {% elif transaction.type == 'expense' %}bg-red-100 text-red-800
@@ -308,6 +471,26 @@
         function closeAddGoalModal() {
             document.getElementById('addGoalModal').classList.add('hidden');
         }
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.getElementById('body');
+        const darkModeText = document.getElementById('darkModeText');
+        let darkMode = false;
+        darkModeToggle.addEventListener('click', function() {
+            darkMode = !darkMode;
+            if (darkMode) {
+                body.classList.add('dark-mode');
+                darkModeText.textContent = 'Light Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-moon');
+                darkModeToggle.querySelector('i').classList.add('fa-sun');
+            } else {
+                body.classList.remove('dark-mode');
+                darkModeText.textContent = 'Dark Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-sun');
+                darkModeToggle.querySelector('i').classList.add('fa-moon');
+            }
+        });
     </script>
 </body>
 </html>
