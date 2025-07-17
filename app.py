@@ -93,6 +93,107 @@ def index():
         logger.error(f"Error loading dashboard: {e}")
         return render_template('dashboard.html', error="Failed to load dashboard data")
 
+#Work in Progress: Change from direct SQL to Supabase client for transactions
+# This will allow us to use Supabase's built-in features like real-time updates and row-level security
+@app.route('/transactions/add', methods=['POST'])
+def add_transaction():
+    """
+    Record a new transaction (income, expense, or transfer)
+    """
+    try:
+        #account_id = request.form.get('account_id')
+        account_id = 1 # Placeholder for account ID, should be set based on user context
+        transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
+        amount = float(request.form.get('amount', 0))
+        description = request.form.get('description', '')
+        
+        if account_id is None or transaction_type is None or amount is None:
+            return jsonify({'error': 'Missing required fields'}), 400
+        
+        # Start a transaction (will need to update both transactions and account balance)
+        response = supabase.table('transactions').insert({
+            'account_id': account_id,
+            'type': transaction_type,
+            'amount': amount,
+            'description': description
+        }).execute()
+
+        # Fetch the current balance
+        account = supabase.table('accounts').select('balance').eq('id', account_id).single().execute()
+        current_balance = account.data['balance'] if account.data else 0
+        
+
+        # Calculate new balance
+        if transaction_type == 'income':
+            new_balance = current_balance + amount
+        elif transaction_type == 'expense':
+            new_balance = current_balance - amount
+        else:
+            new_balance = current_balance
+        
+        # Update the account balance
+        supabase.table('accounts').update({
+            'balance': new_balance
+        }).eq('id', account_id).execute()
+        
+        logger.info(f"Added {transaction_type} transaction: {amount}")
+        return redirect('/')
+        
+    except Exception as e:
+        logger.error(f"Error adding transaction: {e}")
+        return jsonify({'error': 'Failed to add transaction'}), 500
+
+# Account setup: edit opening balance
+@app.route('/account/setup', methods=['GET', 'POST'])
+def account_setup():
+    """
+    Setup or edit account details including opening balance and start month
+    """
+    account_id = 1  # Placeholder for user/account context
+    error_message = None
+    success_message = None
+    if request.method == 'POST':
+        try:
+            balance = request.form.get('balance')  
+            if balance is None or balance == '':
+                error_message = 'Balance is required.'
+            else:
+                balance = float(balance)
+                # Update the account balance
+                supabase.table('accounts').update({
+                    'balance': balance
+                }).eq('id', account_id).execute()
+                logger.info(f"Updated opening balance to: {balance}")
+                success_message = 'Opening balance updated successfully.'
+        except Exception as e:
+            logger.error(f"Error updating opening balance: {e}")
+            error_message = 'Failed to update opening balance.'
+
+        try:
+            start_month = request.form.get('start_month')
+            if start_month is None or start_month == '':
+                error_message = 'Start month is required.'
+            else:
+                with get_db_connection() as conn:
+                    with conn.cursor() as cur:
+                        cur.execute('UPDATE accounts SET start_month = %s WHERE user_id = %s', (start_month, account_id))
+                        conn.commit()
+                success_message = 'Start month updated successfully.'
+        except Exception as e:
+            logger.error(f"Error updating start month: {e}")
+            error_message = 'Failed to update start month.'
+    # Always fetch current account info for display
+    accounts = None
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                cur.execute('SELECT balance FROM accounts WHERE user_id = %s', (account_id,))
+                accounts = cur.fetchone()
+    except Exception as e:
+        logger.error(f"Error fetching account for setup: {e}")
+        error_message = 'Could not fetch account information.'
+    return render_template('accountsetup.html', accounts=accounts, error_message=error_message, success_message=success_message)
+
 @app.route('/accounts', methods=['GET'])
 def accounts_dashboard():
     """
@@ -285,54 +386,6 @@ def update_account():
     except Exception as e:
         logger.error(f"Error updating account: {e}")
         return jsonify({'error': 'Failed to update account'}), 500
-
-@app.route('/transactions/add', methods=['POST'])
-def add_transaction():
-    """
-    Record a new transaction (income, expense, or transfer)
-    """
-    try:
-        #account_id = request.form.get('account_id')
-        account_id = 1 # Placeholder for account ID, should be set based on user context
-        transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
-        amount = float(request.form.get('amount', 0))
-        description = request.form.get('description', '')
-        
-        if account_id is None or transaction_type is None or amount is None:
-            return jsonify({'error': 'Missing required fields'}), 400
-        
-        # Start a transaction (will need to update both transactions and account balance)
-        response = supabase.table('transactions').insert({
-            'account_id': account_id,
-            'type': transaction_type,
-            'amount': amount,
-            'description': description
-        }).execute()
-
-        # Fetch the current balance
-        account = supabase.table('accounts').select('balance').eq('id', account_id).single().execute()
-        current_balance = account.data['balance'] if account.data else 0
-        
-
-        # Calculate new balance
-        if transaction_type == 'income':
-            new_balance = current_balance + amount
-        elif transaction_type == 'expense':
-            new_balance = current_balance - amount
-        else:
-            new_balance = current_balance
-        
-        # Update the account balance
-        supabase.table('accounts').update({
-            'balance': new_balance
-        }).eq('id', account_id).execute()
-        
-        logger.info(f"Added {transaction_type} transaction: {amount}")
-        return redirect('/')
-        
-    except Exception as e:
-        logger.error(f"Error adding transaction: {e}")
-        return jsonify({'error': 'Failed to add transaction'}), 500
 
 @app.route('/goals/add', methods=['POST'])
 def add_savings_goal():
