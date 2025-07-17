@@ -62,7 +62,7 @@ def index():
     """
     try:
         # Fetch account data for user_id = 1
-        account_response = supabase.table('accounts').select('*').eq('user_id', 1).execute()
+        account_response = supabase.table('accounts').select('*').eq('id', 1).execute()
         accounts = account_response.data or []
         #print(f"Accounts fetched: {accounts}")  # Debugging line
         #if not accounts:
