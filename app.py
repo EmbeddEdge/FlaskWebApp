@@ -85,7 +85,7 @@ def index():
             current_savings = accounts[0].get('balance', 0)
             savings_recommendation = calculate_savings_recommendation(monthly_income, current_savings)
 
-        return render_template('dashboard.html', accounts=accounts,
+        return render_template('dashboard.html', accounts=accounts[0] if accounts else None,
                                transactions=transactions,
                                savings_recommendation=savings_recommendation)
 

@@ -215,7 +215,7 @@
                                         Current Balance
                                     </dt>
                                     <dd class="text-2xl font-semibold text-gray-900">
-                                        R{{ "%.2f"|format(accounts['balance'] if accounts else 5) }}
+                                        R{{ "%.2f"|format(accounts.balance if accounts else 5) }}
                                     </dd>
                                 </dl>
                             </div>
