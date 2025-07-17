@@ -152,46 +152,44 @@ def account_setup():
     account_id = 1  # Placeholder for user/account context
     error_message = None
     success_message = None
+
     if request.method == 'POST':
         try:
-            balance = request.form.get('balance')  
+            balance = request.form.get('balance')
+            start_month = request.form.get('start_month')
+
             if balance is None or balance == '':
                 error_message = 'Balance is required.'
             else:
                 balance = float(balance)
-                # Update the account balance
                 supabase.table('accounts').update({
                     'balance': balance
                 }).eq('id', account_id).execute()
                 logger.info(f"Updated opening balance to: {balance}")
                 success_message = 'Opening balance updated successfully.'
-        except Exception as e:
-            logger.error(f"Error updating opening balance: {e}")
-            error_message = 'Failed to update opening balance.'
 
-        try:
-            start_month = request.form.get('start_month')
             if start_month is None or start_month == '':
                 error_message = 'Start month is required.'
             else:
-                with get_db_connection() as conn:
-                    with conn.cursor() as cur:
-                        cur.execute('UPDATE accounts SET start_month = %s WHERE user_id = %s', (start_month, account_id))
-                        conn.commit()
+                supabase.table('accounts').update({
+                    'start_month': start_month
+                }).eq('id', account_id).execute()
+                logger.info(f"Updated start month to: {start_month}")
                 success_message = 'Start month updated successfully.'
+
         except Exception as e:
-            logger.error(f"Error updating start month: {e}")
-            error_message = 'Failed to update start month.'
+            logger.error(f"Error updating account setup: {e}")
+            error_message = 'Failed to update account setup.'
+
     # Always fetch current account info for display
     accounts = None
     try:
-        with get_db_connection() as conn:
-            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-                cur.execute('SELECT balance FROM accounts WHERE user_id = %s', (account_id,))
-                accounts = cur.fetchone()
+        resp = supabase.table('accounts').select('balance, start_month').eq('id', account_id).single().execute()
+        accounts = resp.data if resp.data else None
     except Exception as e:
         logger.error(f"Error fetching account for setup: {e}")
         error_message = 'Could not fetch account information.'
+
     return render_template('accountsetup.html', accounts=accounts, error_message=error_message, success_message=success_message)
 
 @app.route('/accounts', methods=['GET'])
