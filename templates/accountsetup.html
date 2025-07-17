@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Setup</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Brown Cookie/Baking Theme */
+        body {
+            background-color: #f5ede3;
+        }
+        .bg-white {
+            background-color: #f8f5f2 !important;
+        }
+        .text-gray-900 {
+            color: #5c4033 !important;
+        }
+        .text-gray-700 {
+            color: #7c5e3c !important;
+        }
+        .text-gray-500 {
+            color: #a58a6a !important;
+        }
+        .bg-gray-100 {
+            background-color: #f5ede3 !important;
+        }
+        .bg-blue-100, .bg-blue-200 {
+            background-color: #e2c9b0 !important;
+        }
+        .bg-red-100 {
+            background-color: #b86b4b !important;
+        }
+        .bg-green-100 {
+            background-color: #a3a656 !important;
+        }
+        .bg-gray-50 {
+            background-color: #f8f5f2 !important;
+        }
+        .bg-gray-600 {
+            background-color: #a58a6a !important;
+        }
+        .shadow-lg, .shadow {
+            box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.15)!important;
+        }
+        input, select, textarea {
+            background-color: #f8f5f2 !important;
+            color: #5c4033 !important;
+            border-color: #a58a6a !important;
+        }
+        /* Remove logo border and shadow in all modes */
+        img[alt="Krumble Korner Logo"] {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        /* Top nav bar gradient for cookie theme */
+        .cookie-navbar {
+            background: linear-gradient(90deg, #f5c16c 0%, #a97142 100%);
+            box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.07);
+        }
+        .cookie-btn {
+            background-color: #a97142 !important;
+            color: #fff !important;
+            font-size: 0.85rem !important;
+            padding: 0.25rem 0.75rem !important;
+            min-height: 28px !important;
+        }
+        .cookie-btn:hover {
+            background-color: #7c5e3c !important;
+        }
+        .cookie-secondary-btn {
+            background-color: #f5c16c !important;
+            color: #5c4033 !important;
+            font-size: 0.85rem !important;
+            padding: 0.25rem 0.75rem !important;
+            min-height: 28px !important;
+        }
+        .cookie-secondary-btn:hover {
+            background-color: #e2c9b0 !important;
+        }
+    /* Dark mode overrides for brown theme */
+        .dark-mode {
+            background-color: #3e2723 !important;
+            color: #f3f4f6 !important;
+        }
+        .dark-mode .bg-white { background-color: #5c4033 !important; }
+        .dark-mode .text-gray-900 { color: #f3f4f6 !important; }
+        .dark-mode .text-gray-700 { color: #e2c9b0 !important; }
+        .dark-mode .text-gray-500 { color: #f5c16c !important; }
+        .dark-mode .bg-gray-100 { background-color: #3e2723 !important; }
+        .dark-mode .bg-blue-100, .dark-mode .bg-blue-200 { background-color: #a97142 !important; }
+        .dark-mode .bg-red-100 { background-color: #b86b4b !important; }
+        .dark-mode .bg-green-100 { background-color: #a3a656 !important; }
+        .dark-mode .bg-gray-50 { background-color: #5c4033 !important; }
+        .dark-mode .bg-gray-600 { background-color: #a58a6a !important; }
+        .dark-mode .shadow-lg, .dark-mode .shadow { box-shadow: 0 2px 8px 0 rgba(0,0,0,0.7)!important; }
+        .dark-mode input, .dark-mode select, .dark-mode textarea {
+            background-color: #5c4033 !important;
+            color: #f3f4f6 !important;
+            border-color: #f5c16c !important;
+        }
+    </style>
+</head>
+<!--
+<body class="bg-gray-100 min-h-screen flex items-center justify-center" id="body">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-blue-700 mb-6 flex items-center">
+            <i class="fas fa-user-cog mr-2"></i> Account Setup
+        </h2>
+        <form action="/account/setup" method="POST" class="space-y-6">
+            <div>
+                <label for="balance" class="block text-gray-700 font-semibold mb-2">Opening Balance</label>
+                <input type="number" step="0.01" name="balance" id="balance" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                       value="{{ accounts.balance if accounts else '' }}">
+            </div>
+            <div class="flex items-center justify-between">
+                <a href="/" class="text-blue-500 hover:underline">&larr; Back to Dashboard</a>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Save
+                </button>
+            </div>
+        </form>
+        {% if error_message %}
+        <div class="mt-4 text-red-600 font-semibold">
+            {{ error_message }}
+        </div>
+        {% endif %}
+        {% if success_message %}
+        <div class="mt-4 text-green-600 font-semibold">
+            {{ success_message }}
+        </div>
+        {% endif %}
+    </div>
+     Dark Mode Toggle Button 
+    <div class="fixed top-4 right-4 z-50">
+        <button id="darkModeToggle" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 focus:outline-none">
+            <i class="fas fa-moon"></i> <span id="darkModeText">Dark Mode</span>
+        </button>
+    </div>
+    <script>
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.getElementById('body');
+        const darkModeText = document.getElementById('darkModeText');
+        let darkMode = false;
+        darkModeToggle.addEventListener('click', function() {
+            darkMode = !darkMode;
+            if (darkMode) {
+                body.classList.add('dark-mode');
+                darkModeText.textContent = 'Light Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-moon');
+                darkModeToggle.querySelector('i').classList.add('fa-sun');
+            } else {
+                body.classList.remove('dark-mode');
+                darkModeText.textContent = 'Dark Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-sun');
+                darkModeToggle.querySelector('i').classList.add('fa-moon');
+            }
+        });
+    </script>
+</body>
+-->
+<body class="bg-gray-100 min-h-screen flex items-center justify-center" id="body">
+    <!-- Top Header Navigation with Logo and Colored Bar -->
+    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-0.5 cookie-navbar" style="min-height: 32px;">
+        <div class="flex items-center space-x-4">
+            <!-- Logo -->
+            <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-16 w-16 object-contain rounded-full shadow" />
+        </div>
+        <div class="flex items-center space-x-2">
+            <button id="reportsBtn" class="cookie-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
+                <i class="fas fa-chart-line mr-2"></i> Reports
+            </button>
+            <button id="languageBtn" class="cookie-secondary-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
+                <i class="fas fa-language mr-2"></i> Language
+            </button>
+            <button id="darkModeToggle" class="cookie-btn px-4 py-2 rounded shadow hover:bg-yellow-700 focus:outline-none flex items-center">
+                <i class="fas fa-moon"></i> <span id="darkModeText" class="ml-2">Dark Mode</span>
+            </button>
+        </div>
+    </div>
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-blue-700 mb-6 flex items-center">
+            <i class="fas fa-user-cog mr-2"></i> Account Setup
+        </h2>
+        <form action="/account/setup" method="POST" class="space-y-6">
+            <div>
+                <label for="start_month" class="block text-gray-700 font-semibold mb-2">Start Month</label>
+                <input type="text" name="start_month" id="start_month" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                       value="{{ accounts.start_month if accounts else '' }}">
+            </div>
+            <div>
+                <label for="balance" class="block text-gray-700 font-semibold mb-2">Opening Balance</label>
+                <input type="number" step="0.01" name="balance" id="balance" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                       value="{{ accounts.balance if accounts else '' }}">
+            </div>
+            <div class="flex items-center justify-between">
+                <a href="/" class="text-blue-500 hover:underline">&larr; Back to Dashboard</a>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Save
+                </button>
+            </div>
+        </form>
+        {% if error_message %}
+        <div class="mt-4 text-red-600 font-semibold">
+            {{ error_message }}
+        </div>
+        {% endif %}
+        {% if success_message %}
+        <div class="mt-4 text-green-600 font-semibold">
+            {{ success_message }}
+        </div>
+        {% endif %}
+    </div>
+    <script>
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.getElementById('body');
+        const darkModeText = document.getElementById('darkModeText');
+        let darkMode = false;
+        darkModeToggle.addEventListener('click', function() {
+            darkMode = !darkMode;
+            if (darkMode) {
+                body.classList.add('dark-mode');
+                darkModeText.textContent = 'Light Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-moon');
+                darkModeToggle.querySelector('i').classList.add('fa-sun');
+            } else {
+                body.classList.remove('dark-mode');
+                darkModeText.textContent = 'Dark Mode';
+                darkModeToggle.querySelector('i').classList.remove('fa-sun');
+                darkModeToggle.querySelector('i').classList.add('fa-moon');
+            }
+        });
+    </script>
+</body>
+</html>
