@@ -63,31 +63,28 @@ def index():
     try:
         # Fetch account data for user_id = 1
         account_response = supabase.table('accounts').select('*').eq('id', 1).execute()
-        accounts = account_response.data or []
-        #print(f"Accounts fetched: {accounts}")  # Debugging line
-        #if not accounts:
-        #    logger.warning("No accounts found in the database")
-        #print(f"first entry balance: {accounts[0]['balance']}")
-        
-        # Fetch savings goals
-        #goals_response = supabase.table('savings_goals').select('*').execute()
-        #goals = goals_response.data or []
-        
+        accounts = account_response.data[0] if account_response.data else None
         
         # Fetch recent transactions
         transactions_response = supabase.table('transactions').select('*').order('created_at', desc=True).limit(5).execute()
         transactions = transactions_response.data or []
         
-        # Calculate savings recommendations if we have account data
-        savings_recommendation = None
+        # Get current date for the template
+        today = datetime.today()
+        
+        # Ensure the accounts object has all required fields
         if accounts:
-            monthly_income = accounts[0].get('monthly_income', 0)
-            current_savings = accounts[0].get('balance', 0)
-            savings_recommendation = calculate_savings_recommendation(monthly_income, current_savings)
+            accounts = {
+                'month': accounts.get('month', today.strftime('%B %Y')),
+                'cash_box': accounts.get('cash_box', 0),
+                'primary_account': accounts.get('primary_account', 0),
+                'balance': accounts.get('balance', 0)
+            }
 
-        return render_template('dashboard.html', accounts=accounts[0] if accounts else None,
-                               transactions=transactions,
-                               savings_recommendation=savings_recommendation)
+        return render_template('overview.html', 
+                            accounts=accounts,
+                            transactions=transactions,
+                            today=today)
 
     except Exception as e:
         logger.error(f"Error loading dashboard: {e}")
