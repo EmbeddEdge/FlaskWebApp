@@ -152,6 +152,17 @@ def account_setup():
     account_id = 1  # Placeholder for user/account context
     error_message = None
     success_message = None
+    today = datetime.today().replace(day=1)
+    month_options = []
+
+    for i in range(-12, 13):
+        month = today + timedelta(days=31*i)
+        month = month.replace(day=1)
+        value = month.strftime('%Y-%m')
+        label = month.strftime('%B %Y')
+        if (value, label) not in month_options:
+            month_options.append((value, label))
+    month_options = sorted(set(month_options), key=lambda x: x[0])
 
     if request.method == 'POST':
         try:
@@ -190,7 +201,7 @@ def account_setup():
         logger.error(f"Error fetching account for setup: {e}")
         error_message = 'Could not fetch account information.'
 
-    return render_template('accountsetup.html', accounts=accounts, error_message=error_message, success_message=success_message)
+    return render_template('accountsetup.html', accounts=accounts, error_message=error_message, success_message=success_message, month_options=month_options)
 
 @app.route('/accounts', methods=['GET'])
 def accounts_dashboard():
