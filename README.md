@@ -1,6 +1,6 @@
 # Secondary Account Finance Tracker
 
-A Flask-based web application for tracking personal finances, managing savings goals, and reconciling monthly accounts. Built with modern technologies and a user-friendly cookie-themed interface.
+A Flask-based web application for tracking personal finances, managing savings goals, and reconciling monthly accounts. Built with modern technologies and a user-friendly interface.
 
 ## Features
 
