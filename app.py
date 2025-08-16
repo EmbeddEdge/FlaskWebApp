@@ -69,23 +69,33 @@ def index():
         transactions_response = supabase.table('transactions').select('*').order('created_at', desc=True).limit(5).execute()
         transactions = transactions_response.data or []
 
-        # Fetch oldest false reconciled data
+        # First try to fetch oldest unreconciled month, if none exist get the latest reconciled month
         recon_response = supabase.table('reconciled_months')\
-            .select('*')\
+            .select(
+                '*',
+                # Format the date directly in the query
+                'to_char(month::date, \'Month YYYY\') as formatted_month'
+            )\
             .eq('is_reconciled', False)\
             .order('month')\
             .limit(1)\
             .execute()
+        if not recon_response.data:
+            # If no unreconciled months found, get the most recent reconciled month
+            recon_response = supabase.table('reconciled_months')\
+                .select(
+                    '*',
+                    # Format the date directly in the query
+                    'to_char(month::date, \'Month YYYY\') as formatted_month'
+                )\
+                .eq('is_reconciled', True)\
+                .order('month', desc=True)\
+                .limit(1)\
+                .execute()
         reconciled_data = recon_response.data[0] if recon_response.data else None
-
         
         # Get current date for the template
         today = datetime.today()
-
-        # Convert the date string to datetime and format it
-        if reconciled_data and 'month' in reconciled_data:
-            date_obj = datetime.strptime(reconciled_data['month'], '%Y-%m-%d')
-            reconciled_data['formatted_month'] = date_obj.strftime('%B %Y')
         
         # Ensure the accounts object has all required fields
         if accounts:
