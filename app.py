@@ -71,28 +71,27 @@ def index():
 
         # First try to fetch oldest unreconciled month, if none exist get the latest reconciled month
         recon_response = supabase.table('reconciled_months')\
-            .select(
-                '*',
-                # Format the date directly in the query
-                'to_char(month::date, \'Month YYYY\') as formatted_month'
-            )\
+            .select('*')\
             .eq('is_reconciled', False)\
             .order('month')\
             .limit(1)\
             .execute()
+        
         if not recon_response.data:
             # If no unreconciled months found, get the most recent reconciled month
             recon_response = supabase.table('reconciled_months')\
-                .select(
-                    '*',
-                    # Format the date directly in the query
-                    'to_char(month::date, \'Month YYYY\') as formatted_month'
-                )\
+                .select('*')\
                 .eq('is_reconciled', True)\
                 .order('month', desc=True)\
                 .limit(1)\
                 .execute()
+        
         reconciled_data = recon_response.data[0] if recon_response.data else None
+        
+        # Format the date after retrieving it
+        if reconciled_data and 'month' in reconciled_data:
+            date_obj = datetime.strptime(reconciled_data['month'], '%Y-%m-%d')
+            reconciled_data['formatted_month'] = date_obj.strftime('%B %Y')
         
         # Get current date for the template
         today = datetime.today()
