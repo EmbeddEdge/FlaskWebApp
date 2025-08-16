@@ -81,6 +81,11 @@ def index():
         
         # Get current date for the template
         today = datetime.today()
+
+        # Convert the date string to datetime and format it
+        if reconciled_data and 'month' in reconciled_data:
+            date_obj = datetime.strptime(reconciled_data['month'], '%Y-%m-%d')
+            reconciled_data['formatted_month'] = date_obj.strftime('%B %Y')
         
         # Ensure the accounts object has all required fields
         if accounts:
