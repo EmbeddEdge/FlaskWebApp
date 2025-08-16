@@ -113,7 +113,42 @@ def index():
 
     except Exception as e:
         logger.error(f"Error loading dashboard: {e}")
-        return render_template('dashboard.html', error="Failed to load dashboard data")
+        return render_template('overview.html', error="Failed to load dashboard data")
+    
+@app.route('/account/dashboard')
+def account_dashboard():
+    """
+    Main dashboard showing account overview, reconciliation state, and recent activity
+    """
+    try:
+        # Fetch account data for user_id = 1
+        account_response = supabase.table('accounts').select('*').eq('id', 1).execute()
+        accounts = account_response.data[0] if account_response.data else None
+        
+        # Fetch recent transactions
+        transactions_response = supabase.table('transactions').select('*').order('created_at', desc=True).limit(5).execute()
+        transactions = transactions_response.data or []
+        
+        # Get current date for the template
+        today = datetime.today()
+        
+        # Ensure the accounts object has all required fields
+        if accounts:
+            accounts = {
+                'month': accounts.get('month', today.strftime('%B %Y')),
+                'cash_box': accounts.get('cash_box', 0),
+                'primary_account': accounts.get('primary_account', 0),
+                'balance': accounts.get('balance', 0)
+            }
+
+        return render_template('transactions_table.html', 
+                            accounts=accounts,
+                            transactions=transactions,
+                            today=today)
+
+    except Exception as e:
+        logger.error(f"Error loading dashboard: {e}")
+        return render_template('transactions_table.html', error="Failed to load dashboard data")
 
 #Work in Progress: Change from direct SQL to Supabase client for transactions
 # This will allow us to use Supabase's built-in features like real-time updates and row-level security
