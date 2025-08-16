@@ -115,6 +115,100 @@ def index():
         logger.error(f"Error loading dashboard: {e}")
         return render_template('overview.html', error="Failed to load dashboard data")
     
+@app.route('/monthly_activity')
+def monthly_activity():
+    """
+    Monthly activity page showing detailed financial breakdown and reconciliation status
+    """
+    try:
+        # Fetch account data for user_id = 1
+        account_response = supabase.table('accounts').select('*').eq('id', 1).execute()
+        accounts = account_response.data[0] if account_response.data else None
+
+        # Get the month we're looking at (either from request or default to current)
+        selected_month = request.args.get('month', datetime.today().strftime('%Y-%m'))
+        
+        # Convert selected_month to datetime for comparison
+        month_date = datetime.strptime(selected_month, '%Y-%m')
+        
+        # Fetch monthly transactions and calculate summaries
+        transactions_response = supabase.table('transactions')\
+            .select('*')\
+            .gte('created_at', month_date.strftime('%Y-%m-01'))\
+            .lt('created_at', (month_date.replace(day=1) + timedelta(days=32)).replace(day=1).strftime('%Y-%m-%d'))\
+            .order('created_at', desc=True)\
+            .execute()
+        
+        transactions = transactions_response.data or []
+        
+        # Calculate monthly totals
+        cash_in = sum(t['amount'] for t in transactions if t['type'] == 'income' and t.get('payment_method') == 'cash')
+        cash_out = sum(t['amount'] for t in transactions if t['type'] == 'expense' and t.get('payment_method') == 'cash')
+        total_income = sum(t['amount'] for t in transactions if t['type'] == 'income')
+        total_expenses = sum(t['amount'] for t in transactions if t['type'] == 'expense')
+        
+        # Get reconciliation status
+        recon_response = supabase.table('reconciled_months')\
+            .select('*')\
+            .eq('month', selected_month)\
+            .single()\
+            .execute()
+        
+        reconciled_data = recon_response.data if recon_response.data else {
+            'month': selected_month,
+            'is_reconciled': False,
+            'formatted_month': month_date.strftime('%B %Y')
+        }
+        
+        # If accounts exists, update with calculated values
+        if accounts:
+            accounts.update({
+                'cash_in': cash_in,
+                'cash_out': cash_out,
+                'income': total_income,
+                'expenses': total_expenses,
+                'starting_balance': accounts.get('balance', 0) - (total_income - total_expenses)
+            })
+
+        return render_template('monthly_activity.html',
+                            accounts=accounts,
+                            transactions=transactions,
+                            reconciled_data=reconciled_data,
+                            today=datetime.today())
+
+    except Exception as e:
+        logger.error(f"Error loading monthly activity: {e}")
+        return render_template('monthly_activity.html', error="Failed to load monthly data")
+
+@app.route('/reconcile_month', methods=['POST'])
+def reconcile_month():
+    """
+    Mark a month as reconciled and save final balances
+    """
+    try:
+        data = request.get_json()
+        month = data.get('month')
+        
+        if not month:
+            return jsonify({'success': False, 'error': 'Month is required'}), 400
+            
+        # Update or create reconciliation record
+        response = supabase.table('reconciled_months').upsert({
+            'month': month,
+            'is_reconciled': True,
+            'reconciled_at': datetime.now().isoformat(),
+            'account_id': 1  # Replace with actual account ID from session/auth
+        }).execute()
+        
+        if not response.data:
+            return jsonify({'success': False, 'error': 'Failed to update reconciliation status'}), 500
+            
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        logger.error(f"Error reconciling month: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 @app.route('/account/dashboard')
 def account_dashboard():
     """
