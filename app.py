@@ -73,7 +73,7 @@ def index():
         recon_response = supabase.table('reconciled_months')\
             .select('*')\
             .eq('is_reconciled', False)\
-            .order('month', desc=False)\
+            .order('month')\
             .limit(1)\
             .execute()
         reconciled_data = recon_response.data[0] if recon_response.data else None
