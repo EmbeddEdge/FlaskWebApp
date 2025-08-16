@@ -189,7 +189,7 @@
                     <!-- Header Section -->
                     <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-900">Month Activity: {{ accounts.month if accounts else 'Current' }}</h2>
+                            <h2 class="text-2xl font-bold text-gray-900">Month Activity: {{ reconciled_data.month if accounts else 'Current' }}</h2>
                             <p class="text-sm text-gray-500 mt-1">As of {{ today.strftime('%d %B %Y') }}</p>
                         </div>
                         <button onclick="openAddTransactionModal()" class="cookie-btn font-bold py-2 px-4 rounded">

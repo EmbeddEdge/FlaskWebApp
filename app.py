@@ -58,7 +58,7 @@ def get_db_connection():
 @app.route('/')
 def index():
     """
-    Main dashboard showing account overview, savings goals, and recent activity
+    Main dashboard showing account overview, reconciliation state, and recent activity
     """
     try:
         # Fetch account data for user_id = 1
@@ -68,6 +68,16 @@ def index():
         # Fetch recent transactions
         transactions_response = supabase.table('transactions').select('*').order('created_at', desc=True).limit(5).execute()
         transactions = transactions_response.data or []
+
+        # Fetch oldest false reconciled data
+        recon_response = supabase.table('reconciled_months')\
+            .select('*')\
+            .eq('is_reconciled', False)\
+            .order('month', desc=False)\
+            .limit(1)\
+            .execute()
+        reconciled_data = recon_response.data[0] if recon_response.data else None
+
         
         # Get current date for the template
         today = datetime.today()
@@ -84,6 +94,7 @@ def index():
         return render_template('overview.html', 
                             accounts=accounts,
                             transactions=transactions,
+                            reconciled_data=reconciled_data,
                             today=today)
 
     except Exception as e:
