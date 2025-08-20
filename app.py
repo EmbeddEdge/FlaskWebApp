@@ -257,7 +257,8 @@ def add_transaction():
         transaction_type = request.form.get('type')  # 'income', 'expense', or 'transfer'
         amount = float(request.form.get('amount', 0))
         description = request.form.get('description', '')
-        
+        method = request.form.get('method', '')
+
         if account_id is None or transaction_type is None or amount is None:
             return jsonify({'error': 'Missing required fields'}), 400
         
@@ -266,7 +267,8 @@ def add_transaction():
             'account_id': account_id,
             'type': transaction_type,
             'amount': amount,
-            'description': description
+            'description': description,
+            'payment_method': method,
         }).execute()
 
         # Fetch the current balance
