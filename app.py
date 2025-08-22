@@ -274,27 +274,27 @@ def add_transaction():
 
         # Fetch the current primary balance
         account = supabase.table('accounts').select('primary_account').eq('id', account_id).single().execute()
-        current_balance = account.data['primary_account'] if account.data else 0
+        current_primary_bank = account.data['primary_account'] if account.data else 0
 
         # Fetch the cash_box balance
         cash_box = supabase.table('accounts').select('cash_box').eq('id', account_id).single().execute()
         current_cash_box = cash_box.data['cash_box'] if cash_box.data else 0
 
-        # Calculate new bank balance
-        if transaction_type == 'income':
-            new_primary_bank = current_balance + amount
-        elif transaction_type == 'expense':
-            new_primary_bank = current_balance - amount
-        else:
-            new_primary_bank = current_balance
+        # Initialize new balances with current values
+        new_primary_bank = current_primary_bank
+        new_cash_box = current_cash_box
 
-        # Calculate new cash box balance
-        if transaction_type == 'income':
-            new_cash_box = current_cash_box + amount
-        elif transaction_type == 'expense':
-            new_cash_box = current_cash_box - amount
-        else:
-            new_cash_box = current_cash_box
+        # Update only the balance corresponding to the payment method
+        if method == 'bank':
+            if transaction_type == 'income':
+                new_primary_bank = current_primary_bank + amount
+            elif transaction_type == 'expense':
+                new_primary_bank = current_primary_bank - amount
+        elif method == 'cash':
+            if transaction_type == 'income':
+                new_cash_box = current_cash_box + amount
+            elif transaction_type == 'expense':
+                new_cash_box = current_cash_box - amount
 
         # Update the account balance
         supabase.table('accounts').update({
@@ -590,6 +590,33 @@ def add_savings_goal():
     except Exception as e:
         logger.error(f"Error creating savings goal: {e}")
         return jsonify({'error': 'Failed to create savings goal'}), 500
+
+@app.route('/transactions/update_date', methods=['POST'])
+def update_transaction_date():
+    """
+    Update the date of a transaction
+    """
+    try:
+        transaction_id = request.form.get('transaction_id')
+        transaction_date = request.form.get('transaction_date')
+        
+        if not all([transaction_id, transaction_date]):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+            
+        # Update the transaction date
+        response = supabase.table('transactions').update({
+            'created_at': transaction_date
+        }).eq('id', transaction_id).execute()
+        
+        if not response.data:
+            return jsonify({'success': False, 'error': 'Transaction not found'}), 404
+            
+        logger.info(f"Updated transaction {transaction_id} date to {transaction_date}")
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        logger.error(f"Error updating transaction date: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/goals/<int:goal_id>/update', methods=['POST'])
 def update_savings_goal():

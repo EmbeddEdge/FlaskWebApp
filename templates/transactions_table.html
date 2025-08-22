@@ -222,6 +222,10 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ transaction.created_at[:10] if transaction.created_at else '' }}
+                                <button onclick="openEditDateModal('{{ transaction.id }}', '{{ transaction.created_at[:10] if transaction.created_at else '' }}')" 
+                                        class="ml-2 text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ transaction.description }}
@@ -293,6 +297,35 @@
         </div>
     </div>
 
+    <!-- Edit Date Modal -->
+    <div id="editDateModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Edit Transaction Date</h3>
+                <form id="editDateForm" action="/transactions/update_date" method="POST" class="mt-4">
+                    <input type="hidden" id="transaction_id" name="transaction_id">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit_transaction_date">
+                            Transaction Date
+                        </label>
+                        <input type="date" name="transaction_date" id="edit_transaction_date" 
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" required>
+                    </div>
+                    <div class="flex items-center justify-between mt-4">
+                        <button type="button" onclick="closeEditDateModal()" 
+                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Update Date
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Goal Modal -->
     <div id="addGoalModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -354,6 +387,49 @@
         function closeAddGoalModal() {
             document.getElementById('addGoalModal').classList.add('hidden');
         }
+
+        function openEditDateModal(transactionId, currentDate) {
+            document.getElementById('transaction_id').value = transactionId;
+            document.getElementById('edit_transaction_date').value = currentDate;
+            document.getElementById('editDateModal').classList.remove('hidden');
+
+            // Set up date input restrictions
+            const dateInput = document.getElementById('edit_transaction_date');
+            const today = new Date().toISOString().split('T')[0];
+            const minDate = new Date();
+            minDate.setFullYear(minDate.getFullYear() - 1);
+            const minDateStr = minDate.toISOString().split('T')[0];
+            
+            dateInput.setAttribute('max', today);
+            dateInput.setAttribute('min', minDateStr);
+        }
+
+        function closeEditDateModal() {
+            document.getElementById('editDateModal').classList.add('hidden');
+        }
+
+        // Add form submission handling
+        document.getElementById('editDateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('/transactions/update_date', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload(); // Refresh the page to show updated date
+                } else {
+                    alert('Error updating date: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error updating date: ' + error);
+            });
+        });
 
         // Dark mode toggle
         const darkModeToggle = document.getElementById('darkModeToggle');
