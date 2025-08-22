@@ -192,22 +192,31 @@ def reconcile_month():
     """
     try:
         data = request.get_json()
+        if not data:
+            return jsonify({'success': False, 'error': 'No data provided'}), 400
+            
         month = data.get('month')
-        
         if not month:
             return jsonify({'success': False, 'error': 'Month is required'}), 400
+            
+        # Validate the month format (should be YYYY-MM-DD)
+        try:
+            datetime.strptime(month, '%Y-%m-%d')
+        except ValueError:
+            return jsonify({'success': False, 'error': 'Invalid month format. Expected YYYY-MM-DD'}), 400
             
         # Update or create reconciliation record
         response = supabase.table('reconciled_months').upsert({
             'month': month,
             'is_reconciled': True,
             'reconciled_at': datetime.now().isoformat(),
-            'account_id': 1  # Replace with actual account ID from session/auth
+            'account_id': 1
         }).execute()
         
         if not response.data:
             return jsonify({'success': False, 'error': 'Failed to update reconciliation status'}), 500
             
+        logger.info(f"Successfully reconciled month: {month}")
         return jsonify({'success': True})
         
     except Exception as e:

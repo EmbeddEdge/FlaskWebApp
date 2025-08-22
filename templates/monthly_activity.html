@@ -460,9 +460,19 @@
 
         function reconcileMonth() {
             if (confirm('Are you sure you want to reconcile this month? This action cannot be undone.')) {
-                // Get the current month from the page
+                // Get the current month from the page and format it correctly
                 const monthText = document.querySelector('h2').textContent;
-                const month = monthText.split(': ')[1];
+                // Extract the month name (e.g., "August 2025")
+                const monthPart = monthText.split(': ')[1];
+                if (!monthPart) {
+                    alert('Could not determine the current month');
+                    return;
+                }
+                
+                // Convert month name to YYYY-MM-DD format
+                const date = new Date(monthPart + ' 1'); // Add day 1 to make a valid date
+                const formattedMonth = date.getFullYear() + '-' + 
+                    String(date.getMonth() + 1).padStart(2, '0') + '-01';
                 
                 // Submit to the server
                 fetch('/reconcile_month', {
