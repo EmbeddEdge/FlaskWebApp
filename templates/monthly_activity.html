@@ -460,17 +460,22 @@
 
         function reconcileMonth() {
             if (confirm('Are you sure you want to reconcile this month? This action cannot be undone.')) {
-                // Get the current month from the page and format it correctly
+                // Get the reconciled data element and extract the formatted month
                 const monthText = document.querySelector('h2').textContent;
-                // Extract the month name (e.g., "August 2025")
-                const monthPart = monthText.split(': ')[1];
-                if (!monthPart) {
-                    alert('Could not determine the current month');
+                // Extract the month name (e.g., "Month Activity: August 2025")
+                const match = monthText.match(/Month Activity:\s*(\w+\s+\d{4})/);
+                if (!match || !match[1]) {
+                    alert('Could not determine the current month. Please refresh the page and try again.');
                     return;
                 }
                 
                 // Convert month name to YYYY-MM-DD format
+                const monthPart = match[1].trim();
                 const date = new Date(monthPart + ' 1'); // Add day 1 to make a valid date
+                if (isNaN(date.getTime())) {
+                    alert('Invalid month format. Please refresh the page and try again.');
+                    return;
+                }
                 const formattedMonth = date.getFullYear() + '-' + 
                     String(date.getMonth() + 1).padStart(2, '0') + '-01';
                 
