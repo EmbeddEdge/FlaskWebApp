@@ -155,11 +155,15 @@ def monthly_activity():
             .single()\
             .execute()
         
-        reconciled_data = recon_response.data if recon_response.data else {
+        # Always ensure we have formatted_month, whether we found data or not
+        formatted_month = month_date.strftime('%B %Y')
+        
+        reconciled_data = recon_response.data if recon_response.data else {}
+        reconciled_data.update({
             'month': month_start,
-            'is_reconciled': False,
-            'formatted_month': month_date.strftime('%B %Y')
-        }
+            'is_reconciled': reconciled_data.get('is_reconciled', False),
+            'formatted_month': formatted_month
+        })
         
         # If accounts exists, update with calculated values
         if accounts:
