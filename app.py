@@ -272,22 +272,34 @@ def add_transaction():
             'payment_method': method,
         }).execute()
 
-        # Fetch the current balance
-        account = supabase.table('accounts').select('balance').eq('id', account_id).single().execute()
-        current_balance = account.data['balance'] if account.data else 0
-        
+        # Fetch the current primary balance
+        account = supabase.table('accounts').select('primary_account').eq('id', account_id).single().execute()
+        current_balance = account.data['primary_account'] if account.data else 0
 
-        # Calculate new balance
+        # Fetch the cash_box balance
+        cash_box = supabase.table('accounts').select('cash_box').eq('id', account_id).single().execute()
+        current_cash_box = cash_box.data['cash_box'] if cash_box.data else 0
+
+        # Calculate new bank balance
         if transaction_type == 'income':
-            new_balance = current_balance + amount
+            new_primary_bank = current_balance + amount
         elif transaction_type == 'expense':
-            new_balance = current_balance - amount
+            new_primary_bank = current_balance - amount
         else:
-            new_balance = current_balance
-        
+            new_primary_bank = current_balance
+
+        # Calculate new cash box balance
+        if transaction_type == 'income':
+            new_cash_box = current_cash_box + amount
+        elif transaction_type == 'expense':
+            new_cash_box = current_cash_box - amount
+        else:
+            new_cash_box = current_cash_box
+
         # Update the account balance
         supabase.table('accounts').update({
-            'balance': new_balance
+            'primary_account': new_primary_bank,
+            'cash_box': new_cash_box
         }).eq('id', account_id).execute()
         
         logger.info(f"Added {transaction_type} transaction: {amount}")
