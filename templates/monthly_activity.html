@@ -257,11 +257,11 @@
                                             </div>
                                             <div class="flex justify-between">
                                                 <span class="text-sm">Income:</span>
-                                                <span class="text-sm text-green-600">R{{ "%.2f"|format(accounts.income if accounts else 0) }}</span>
+                                                <span class="text-sm text-green-600">R{{ "%.2f"|format(accounts.amount if accounts and transactions.type == 'income' else 0) }}</span>
                                             </div>
                                             <div class="flex justify-between">
                                                 <span class="text-sm">Expenses:</span>
-                                                <span class="text-sm text-red-600">R{{ "%.2f"|format(accounts.expenses if accounts else 0) }}</span>
+                                                <span class="text-sm text-red-600">R{{ "%.2f"|format(transactions.amount if accounts and transactions.type == 'expense' else 0) }}</span>
                                             </div>
                                             <div class="border-t border-gray-200 pt-2 mt-2">
                                                 <div class="flex justify-between">
