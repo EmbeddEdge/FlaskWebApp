@@ -385,7 +385,7 @@ def account_setup():
     # Always fetch current account info for display
     accounts = None
     try:
-        resp = supabase.table('accounts').select('balance, start_month').eq('id', account_id).single().execute()
+        resp = supabase.table('accounts').select('cash_box, primary_account, start_month').eq('id', account_id).single().execute()
         accounts = resp.data if resp.data else None
     except Exception as e:
         logger.error(f"Error fetching account for setup: {e}")
