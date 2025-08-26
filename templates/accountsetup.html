@@ -197,10 +197,16 @@
                 </select>
             </div>
             <div>
-                <label for="balance" class="block text-gray-700 font-semibold mb-2">Opening Balance</label>
-                <input type="number" step="0.01" name="balance" id="balance" required
+                <label for="cash_box" class="block text-gray-700 font-semibold mb-2">Opening Cash Balance</label>
+                <input type="number" step="0.01" name="cash_box" id="cash_box" required
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                       value="{{ accounts.balance if accounts else '' }}">
+                       value="{{ accounts.cash_box if accounts else '' }}">
+            </div>
+            <div>
+                <label for="primary_account" class="block text-gray-700 font-semibold mb-2">Opening Account Balance</label>
+                <input type="number" step="0.01" name="primary_account" id="primary_account" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                       value="{{ accounts.primary_account if accounts else '' }}">
             </div>
             <div class="flex items-center justify-between">
                 <a href="/" class="text-blue-500 hover:underline">&larr; Back to Dashboard</a>
