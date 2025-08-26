@@ -345,18 +345,29 @@ def account_setup():
 
     if request.method == 'POST':
         try:
-            balance = request.form.get('balance')
+            primary_account = request.form.get('primary_account')
+            cash_box = request.form.get('cash_box')
             start_month = request.form.get('start_month')
 
-            if balance is None or balance == '':
-                error_message = 'Balance is required.'
+            if primary_account is None or primary_account == '':
+                error_message = 'Primary account balance is required.'
             else:
-                balance = float(balance)
+                primary_account = float(primary_account)
                 supabase.table('accounts').update({
-                    'balance': balance
+                    'primary_account': primary_account
                 }).eq('id', account_id).execute()
-                logger.info(f"Updated opening balance to: {balance}")
+                logger.info(f"Updated opening balance to: {primary_account}")
                 success_message = 'Opening balance updated successfully.'
+
+            if cash_box is None or cash_box == '':
+                error_message = 'Cash box balance is required.'
+            else:
+                cash_box = float(cash_box)
+                supabase.table('accounts').update({
+                    'cash_box': cash_box
+                }).eq('id', account_id).execute()
+                logger.info(f"Updated cash box balance to: {cash_box}")
+                success_message = 'Cash box balance updated successfully.'
 
             if start_month is None or start_month == '':
                 error_message = 'Start month is required.'
