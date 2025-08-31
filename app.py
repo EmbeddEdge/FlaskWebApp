@@ -134,9 +134,9 @@ def monthly_activity():
         # Fetch monthly transactions and calculate summaries
         transactions_response = supabase.table('transactions')\
             .select('*')\
-            .gte('created_at', month_date.strftime('%Y-%m-01'))\
-            .lt('created_at', (month_date.replace(day=1) + timedelta(days=32)).replace(day=1).strftime('%Y-%m-%d'))\
-            .order('created_at', desc=True)\
+            .gte('transaction_date', month_date.strftime('%Y-%m-01'))\
+            .lt('transaction_date', (month_date.replace(day=1) + timedelta(days=32)).replace(day=1).strftime('%Y-%m-%d'))\
+            .order('transaction_date', desc=True)\
             .execute()
         
         transactions = transactions_response.data or []
