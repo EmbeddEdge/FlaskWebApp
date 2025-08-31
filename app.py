@@ -147,6 +147,11 @@ def monthly_activity():
         total_income = sum(t['amount'] for t in transactions if t['type'] == 'income')
         total_expenses = sum(t['amount'] for t in transactions if t['type'] == 'expense')
         
+        # Debug logging
+        logger.info(f"Transactions found: {len(transactions)}")
+        logger.info(f"Expense transactions: {[t for t in transactions if t['type'] == 'expense']}")
+        logger.info(f"Total expenses calculated: {total_expenses}")
+        
         # Get reconciliation status - ensure we use full date format for the query
         month_start = f"{selected_month}-01"  # Convert YYYY-MM to YYYY-MM-DD
         recon_response = supabase.table('reconciled_months')\

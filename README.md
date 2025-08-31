@@ -80,6 +80,23 @@ A Flask-based web application for tracking personal finances, managing savings g
 
 This project is licensed under the terms included in the LICENSE file.
 
+## Todo
+
+Update the SQL schema to match the new values
+To use these new features, make sure to:
+
+Run the SQL schema updates first
+Update your Supabase configuration to include the new tables/columns
+When adding transactions, include the payment_method field ('cash' or 'bank')
+Test the reconciliation process with the new UI elements
+The monthly activity page will now show:
+
+Reconciliation status with ability to reconcile
+Detailed cash flow breakdown
+Starting and ending balances
+Monthly income and expenses
+Proper date formatting and navigation
+
 ## Contributing
 
 Feel free to submit issues, fork the repository, and create pull requests for any improvements.
