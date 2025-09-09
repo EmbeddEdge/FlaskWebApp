@@ -124,6 +124,7 @@ def monthly_activity():
         # Fetch account data for user_id = 1
         account_response = supabase.table('accounts').select('*').eq('id', 1).execute()
         accounts = account_response.data[0] if account_response.data else None
+        logger.info(f"Account data: {accounts}")
 
         # Get the month we're looking at (either from request or default to current)
         selected_month = request.args.get('month', datetime.today().strftime('%Y-%m'))
