@@ -190,7 +190,13 @@ def monthly_activity():
 
     except Exception as e:
         logger.error(f"Error loading monthly activity: {e}")
-        return render_template('monthly_activity.html', error="Failed to load monthly data")
+        # Provide default values for all required template variables
+        return render_template('monthly_activity.html', 
+                           error="Failed to load monthly data",
+                           today=datetime.today(),
+                           reconciled_data={'is_reconciled': False, 'formatted_month': datetime.today().strftime('%B %Y')},
+                           accounts=None,
+                           transactions=[])
 
 @app.route('/reconcile_month', methods=['POST'])
 def reconcile_month():
@@ -216,8 +222,7 @@ def reconcile_month():
         response = supabase.table('reconciled_months').upsert({
             'month': month,
             'is_reconciled': True,
-            'reconciled_at': datetime.now().isoformat(),
-            'account_id': 1
+            'reconciled_at': datetime.now().isoformat()
         }).execute()
         
         if not response.data:

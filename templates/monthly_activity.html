@@ -204,7 +204,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <div>
                             <a href="/monthly_activity" class="group hover:opacity-80 transition-opacity">
-                                <h2 class="text-2xl font-bold text-gray-900 group-hover:underline">Month Activity: {{ reconciled_data.formatted_month if accounts else 'Current' }}</h2>
+                                <h2 id="monthActivityTitle" class="text-2xl font-bold text-gray-900 group-hover:underline">Month Activity: {{ reconciled_data.formatted_month if reconciled_data and reconciled_data.formatted_month else 'Current' }}</h2>
                                 <p class="text-sm text-gray-500 mt-1">As of {{ today.strftime('%d %B %Y') }}</p>
                             </a>
                         </div>
@@ -268,11 +268,11 @@
                                             </div>
                                             <div class="flex justify-between">
                                                 <span class="text-sm">Income:</span>
-                                                <span class="text-sm text-green-600">R{{ "%.2f"|format(accounts.amount if accounts and transactions.type == 'income' else 0) }}</span>
+                                                <span class="text-sm text-green-600">R{{ "%.2f"|format(accounts.income if accounts else 0) }}</span>
                                             </div>
                                             <div class="flex justify-between">
                                                 <span class="text-sm">Expenses:</span>
-                                                <span class="text-sm text-red-600">R{{ "%.2f"|format(transactions.amount if transactions.type == 'expense' else 0) }}</span>
+                                                <span class="text-sm text-red-600">R{{ "%.2f"|format(accounts.expenses if accounts else 0) }}</span>
                                             </div>
                                             <div class="border-t border-gray-200 pt-2 mt-2">
                                                 <div class="flex justify-between">
@@ -472,9 +472,11 @@
         function reconcileMonth() {
             if (confirm('Are you sure you want to reconcile this month? This action cannot be undone.')) {
                 // Get the reconciled data element and extract the formatted month
-                const monthText = document.querySelector('h2').textContent;
+                const monthText = document.querySelector('#monthActivityTitle').textContent;
+                console.log('Found h2 text:', monthText); // Debug line 1
                 // Extract the month name (e.g., "Month Activity: August 2025")
                 const match = monthText.match(/Month Activity:\s*(\w+\s+\d{4})/);
+                console.log('Regex match result:', match); // Debug line 2
                 if (!match || !match[1]) {
                     alert('Could not determine the current month. Please refresh the page and try again.');
                     return;
@@ -482,13 +484,39 @@
                 
                 // Convert month name to YYYY-MM-DD format
                 const monthPart = match[1].trim();
-                const date = new Date(monthPart + ' 1'); // Add day 1 to make a valid date
-                if (isNaN(date.getTime())) {
-                    alert('Invalid month format. Please refresh the page and try again.');
-                    return;
+                console.log('Month part:', monthPart); // Debug the extracted month and year
+
+                // Split the month name and year
+                const [monthName, yearStr] = monthPart.split(' ');
+                console.log('Month name:', monthName, 'Year:', yearStr);
+
+                // Convert month name to month number (0-11)
+                const months = {
+                    'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
+                    'July': 6, 'August': 7, 'September': 8, 'October': 9, 'November': 10, 'December': 11
+                };
+                
+                const monthIndex = months[monthName];
+                if (monthIndex === undefined) {
+                    throw new Error(`Invalid month name: ${monthName}`);
                 }
-                const formattedMonth = date.getFullYear() + '-' + 
-                    String(date.getMonth() + 1).padStart(2, '0') + '-01';
+
+                // Create date using the numeric constructor
+                const date = new Date(parseInt(yearStr), monthIndex, 1);
+                console.log('Created date:', date);
+
+                if (isNaN(date.getTime())) {
+                    throw new Error("Failed to create valid date");
+                }
+
+                // Extract year and month, pad month with leading zero
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, "0");
+
+                const formattedDate = `${year}-${month}-01`;
+
+                console.log('Formatted date:', formattedDate); // Debug the final formatted date
+                console.log('Created date:', date);
                 
                 // Submit to the server
                 fetch('/reconcile_month', {
@@ -496,7 +524,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ month: month })
+                    body: JSON.stringify({ month: formattedDate })
                 })
                 .then(response => response.json())
                 .then(data => {
