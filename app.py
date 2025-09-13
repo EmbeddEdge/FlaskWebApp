@@ -218,12 +218,14 @@ def reconcile_month():
         except ValueError:
             return jsonify({'success': False, 'error': 'Invalid month format. Expected YYYY-MM-DD'}), 400
             
-        # Update or create reconciliation record
-        response = supabase.table('reconciled_months').upsert({
-            'month': month,
-            'is_reconciled': True,
-            'reconciled_at': datetime.now().isoformat()
-        }).execute()
+        # Update existing reconciliation record
+        response = supabase.table('reconciled_months')\
+            .update({
+                'is_reconciled': True,
+                'reconciled_at': datetime.now().isoformat()
+            })\
+            .eq('month', month)\
+            .execute()
         
         if not response.data:
             return jsonify({'success': False, 'error': 'Failed to update reconciliation status'}), 500
@@ -295,7 +297,7 @@ def add_transaction():
             'amount': amount,
             'description': description,
             'payment_method': method,
-        }).execute()
+        }).eq('id', account_id).execute()
 
         # Fetch the current primary balance
         account = supabase.table('accounts').select('primary_account').eq('id', account_id).single().execute()
