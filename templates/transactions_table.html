@@ -149,8 +149,8 @@
             <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <!-- Content Container (moved down for logo spacing) -->
                 <div class="mb-8" style="margin-top: 4.5rem;">
-
-        <!-- Savings Goals -->
+        <!--              
+         Comment: Savings Goals
         <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold text-gray-900">Savings Goals</h2>
@@ -184,9 +184,9 @@
                                     {% set percentage = 0 %}
                                     {% endif %}
 
-                                    <!--<div style="width: {{ percentage }}%"
+                                    <div style="width: {{ percentage }}%"
                                         class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500">
-                                    </div>-->
+                                    </div>
                                 </div>
                                 <div class="text-sm text-gray-600">
                                     R{{ "%.2f"|format(goal.current_amount) }} / R{{ "%.2f"|format(goal.target_amount) }}
@@ -198,9 +198,10 @@
                 {% endfor %}
             </div>
         </div>
+    -->
 
         <!-- Recent Transactions -->
-        <div class="mb-8">
+        <div class="mb-8 mt-8 pt-4">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold text-gray-900">Recent Transactions</h2>
                 <button onclick="openAddTransactionModal()" class="cookie-secondary-btn font-bold py-2 px-4 rounded">
