@@ -272,7 +272,6 @@ def account_dashboard():
         logger.error(f"Error loading dashboard: {e}")
         return render_template('transactions_table.html', error="Failed to load dashboard data")
 
-#Work in Progress: Change from direct SQL to Supabase client for transactions
 # This will allow us to use Supabase's built-in features like real-time updates and row-level security
 @app.route('/transactions/add', methods=['POST'])
 def add_transaction():
