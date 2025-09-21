@@ -49,7 +49,7 @@ A Flask-based web application for tracking personal finances, managing savings g
    cd FirstWebApp
 
    # Create and activate virtual environment
-   python -m venv myenv
+   python3 -m venv myenv
    source myenv/bin/activate  # On Windows: myenv\Scripts\activate
 
    # Install dependencies
@@ -72,7 +72,7 @@ A Flask-based web application for tracking personal finances, managing savings g
 
 ## Features in Development
 
-- Smart savings calculator
+- Month close-out and error handling
 - Enhanced reporting capabilities
 - Mobile-responsive design improvements
 
