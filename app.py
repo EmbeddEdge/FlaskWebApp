@@ -237,6 +237,71 @@ def reconcile_month():
         logger.error(f"Error reconciling month: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
+
+# Dedicated reconciliation page: shows a form to input closing balance and confirm
+@app.route('/reconcile_month/close', methods=['GET', 'POST'])
+def reconcile_month_close():
+    try:
+        if request.method == 'GET':
+            month = request.args.get('month', datetime.today().strftime('%Y-%m-01'))
+            # Normalize month to YYYY-MM-01
+            try:
+                month_date = datetime.strptime(month, '%Y-%m-%d')
+            except ValueError:
+                month_date = datetime.strptime(month, '%Y-%m')
+                month = month_date.strftime('%Y-%m-01')
+
+            month_start = month
+            month_end = (datetime.strptime(month_start, '%Y-%m-%d').replace(day=1) + timedelta(days=32)).replace(day=1).strftime('%Y-%m-%d')
+
+            transactions_response = supabase.table('transactions')\
+                .select('*')\
+                .gte('transaction_date', month_start)\
+                .lt('transaction_date', month_end)\
+                .execute()
+            transactions = transactions_response.data or []
+
+            total_income = sum(t['amount'] for t in transactions if t.get('type') == 'income')
+            total_expenses = sum(t['amount'] for t in transactions if t.get('type') == 'expense')
+
+            formatted_month = datetime.strptime(month_start, '%Y-%m-%d').strftime('%B %Y')
+
+            return render_template('reconcile_month.html', month=month_start, formatted_month=formatted_month, total_income=total_income, total_expenses=total_expenses)
+
+        # POST - process manual closing balance and mark reconciled
+        data = request.form or request.get_json() or {}
+        month = data.get('month')
+        closing_balance_raw = data.get('closing_balance')
+        if not month or closing_balance_raw is None:
+            return render_template('reconcile_month.html', error='Missing required fields', month=month or datetime.today().strftime('%Y-%m-01'), total_income=0, total_expenses=0)
+
+        closing_balance = float(closing_balance_raw)
+
+        # Update existing reconciliation record
+        update_resp = supabase.table('reconciled_months')\
+            .update({
+                'is_reconciled': True,
+                'closing_balance': closing_balance,
+                'reconciled_at': datetime.now().isoformat()
+            })\
+            .eq('month', month)\
+            .execute()
+
+        # If no record updated, insert a new one
+        if not update_resp.data:
+            supabase.table('reconciled_months').insert({
+                'month': month,
+                'is_reconciled': True,
+                'closing_balance': closing_balance,
+                'reconciled_at': datetime.now().isoformat()
+            }).execute()
+
+        return redirect(f'/monthly_activity?month={month[:7]}')
+
+    except Exception as e:
+        logger.error(f"Error in reconcile_month_close: {e}")
+        return render_template('reconcile_month.html', error='Failed to process reconciliation', month=request.form.get('month', datetime.today().strftime('%Y-%m-01')), total_income=0, total_expenses=0)
+
 @app.route('/account/dashboard')
 def account_dashboard():
     """

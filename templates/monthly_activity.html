@@ -227,9 +227,10 @@
                                     {{ "Reconciled" if reconciled_data.is_reconciled else "Pending Reconciliation" }}
                                 </span>
                                 {% if not reconciled_data.is_reconciled %}
-                                <button onclick="reconcileMonth()" class="cookie-btn font-bold py-1 px-3 rounded text-sm">
+                                <!-- Navigate to a dedicated reconciliation page where the user can input the closing balance -->
+                                <a href="/reconcile_month/close?month={{ reconciled_data.month[:10] if reconciled_data and reconciled_data.month else today.strftime('%Y-%m-01') }}" class="cookie-btn font-bold py-1 px-3 rounded text-sm">
                                     <i class="fas fa-check mr-1"></i> Reconcile Month
-                                </button>
+                                </a>
                                 {% endif %}
                             </div>
                         </div>
