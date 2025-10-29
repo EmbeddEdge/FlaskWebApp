@@ -256,69 +256,35 @@
                 </div>
             </div>
 
-            <!-- Previous Month Activity Card -->
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+           <!-- Previous Reconciled Months Card -->
+        {% if reconciled_months and reconciled_months|length > 0 %}
+        <div class="max-w-7xl mx-auto py-2 sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg mt-6">
                 <div class="p-6">
-                    <!-- Header Section -->
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center justify-between mb-4">
                         <div>
-                            <a href="/monthly_activity?month={{ reconciled_data.month[:7] if reconciled_data and reconciled_data.month else today.strftime('%Y-%m') }}">
-                                <h2 class="text-2xl font-bold text-gray-900 group-hover:underline">Previous closed out months: {{ reconciled_data.formatted_month if accounts else 'Current' }}</h2>
-                                <p class="text-sm text-gray-500 mt-1">As of {{ today.strftime('%d %B %Y') }}</p>
-                            </a>
-                        </div>
-                        <button onclick="openAddTransactionModal()" class="cookie-btn font-bold py-2 px-4 rounded">
-                            <i class="fas fa-plus"></i> Add Transaction
-                        </button>
-                    </div>
-
-                    <!-- Current Balances Section -->
-                    <div class="mb-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <i class="fas fa-wallet text-blue-500 text-3xl"></i>
-                            <h3 class="text-lg font-semibold text-gray-900">Current Balances</h3>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="ml-4 flex-grow">
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-500">Cash Box</p>
-                                        <p class="text-lg font-semibold text-gray-900">R{{ "%.2f"|format(accounts.cash_box if accounts else 0) }}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-500">Primary Account</p>
-                                        <p class="text-lg font-semibold text-gray-900">R{{ "%.2f"|format(accounts.primary_account if accounts else 0) }}</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Previous Reconciled Months</h3>
+                            <p class="text-sm text-gray-500">Click a month to view transactions for that closed month</p>
                         </div>
                     </div>
 
-                    <!-- Last Transaction Section -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Last Transaction</h3>
-                        {% if transactions and transactions|length > 0 %}
-                        {% set latest = transactions[0] %}
-                        <div class="bg-gray-50 rounded-lg p-3">
-                            <div class="flex justify-between items-center">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {% for rm in reconciled_months %}
+                        <a href="/monthly_activity?month={{ rm.month[:7] }}" class="block p-3 bg-gray-50 rounded hover:bg-gray-100">
+                            <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="font-medium text-gray-900">{{ latest.description }}</p>
-                                    <p class="text-sm text-gray-500">{{ latest.created_at[:10] if latest.created_at else '' }}</p>
+                                    <p class="text-sm font-medium text-gray-800">{{ rm.formatted_month if rm.formatted_month else (rm.month[:7] if rm.month) }}</p>
+                                    <p class="text-xs text-gray-500">Closed</p>
                                 </div>
-                                <span class="px-3 py-1 text-sm font-semibold rounded-full 
-                                    {% if latest.type == 'income' %}bg-green-100 text-green-800
-                                    {% elif latest.type == 'expense' %}bg-red-100 text-red-800
-                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                    R{{ "%.2f"|format(latest.amount) }}
-                                </span>
+                                <div class="text-xs text-gray-400">View</div>
                             </div>
-                        </div>
-                        {% else %}
-                        <p class="text-gray-500 text-sm">No recent transactions</p>
-                        {% endif %}
+                        </a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
+        </div>
+        {% endif %}
 
     </div>
 

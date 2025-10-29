@@ -432,6 +432,7 @@ def add_transaction():
         amount = float(request.form.get('amount', 0))
         description = request.form.get('description', '')
         method = request.form.get('method', '')
+        transaction_date = request.form.get('transaction_date', datetime.now().strftime('%Y-%m-%d'))
 
         if account_id is None or transaction_type is None or amount is None:
             return jsonify({'error': 'Missing required fields'}), 400
@@ -443,6 +444,7 @@ def add_transaction():
             'amount': amount,
             'description': description,
             'payment_method': method,
+            'transaction_date': transaction_date
         }).execute()
 
         # Fetch the current primary balance
@@ -789,7 +791,7 @@ def update_transaction_date():
             
         # Update the transaction date
         response = supabase.table('transactions').update({
-            'created_at': transaction_date
+            'transaction_date': transaction_date
         }).eq('id', transaction_id).execute()
         
         if not response.data:

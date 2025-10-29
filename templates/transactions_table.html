@@ -222,8 +222,8 @@
                         {% for transaction in transactions %}
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ transaction.created_at[:10] if transaction.created_at else '' }}
-                                <button onclick="openEditDateModal('{{ transaction.id }}', '{{ transaction.created_at[:10] if transaction.created_at else '' }}')" 
+                                {{ transaction.transaction_date[:10] if transaction.transaction_date else '' }}
+                                <button onclick="openEditDateModal('{{ transaction.id }}', '{{ transaction.transaction_date[:10] if transaction.transaction_date else '' }}')" 
                                         class="ml-2 text-blue-600 hover:text-blue-800">
                                     <i class="fas fa-edit"></i>
                                 </button>
