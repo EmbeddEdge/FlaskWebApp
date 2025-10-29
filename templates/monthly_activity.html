@@ -317,6 +317,35 @@
     </div>
 
     <!-- Add Transaction Modal -->
+        <!-- Previous Reconciled Months Card -->
+        {% if reconciled_months and reconciled_months|length > 0 %}
+        <div class="max-w-7xl mx-auto py-2 sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg mt-6">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Previous Reconciled Months</h3>
+                            <p class="text-sm text-gray-500">Click a month to view transactions for that closed month</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {% for rm in reconciled_months %}
+                        <a href="/monthly_activity?month={{ rm.month[:7] }}" class="block p-3 bg-gray-50 rounded hover:bg-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">{{ rm.formatted_month if rm.formatted_month else (rm.month[:7] if rm.month) }}</p>
+                                    <p class="text-xs text-gray-500">Closed</p>
+                                </div>
+                                <div class="text-xs text-gray-400">View</div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     <div id="addTransactionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3 text-center">

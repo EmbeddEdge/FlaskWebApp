@@ -1,5 +1,4 @@
 # Secondary Account Finance Render Hosted Flask app with Supabase integration
-
 import os
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, render_template # type: ignore
@@ -162,6 +161,7 @@ def monthly_activity():
             .single()\
             .execute()
         
+        
         # Always ensure we have formatted_month, whether we found data or not
         formatted_month = month_date.strftime('%B %Y')
         
@@ -171,6 +171,28 @@ def monthly_activity():
             'is_reconciled': reconciled_data.get('is_reconciled', False),
             'formatted_month': formatted_month
         })
+
+        # Fetch a short list of recent reconciled months for the "Previous Month Activity" card
+        try:
+            reconciled_months_resp = supabase.table('reconciled_months')\
+                .select('*')\
+                .eq('is_reconciled', True)\
+                .order('month', desc=True)\
+                .limit(6)\
+                .execute()
+            reconciled_months = reconciled_months_resp.data or []
+        except Exception:
+            reconciled_months = []
+
+        # Format each reconciled month for display and provide a short month string YYYY-MM
+        for rm in reconciled_months:
+            try:
+                rm_date = datetime.strptime(rm.get('month', ''), '%Y-%m-%d')
+                rm['formatted_month'] = rm_date.strftime('%B %Y')
+                rm['month_short'] = rm.get('month', '')[:7]
+            except Exception:
+                rm['formatted_month'] = rm.get('month', '')
+                rm['month_short'] = rm.get('month', '')[:7]
         
         # If accounts exists, update with calculated values
         if accounts:
@@ -183,10 +205,11 @@ def monthly_activity():
             })
 
         return render_template('monthly_activity.html',
-                            accounts=accounts,
-                            transactions=transactions,
-                            reconciled_data=reconciled_data,
-                            today=datetime.today())
+                accounts=accounts,
+                transactions=transactions,
+                reconciled_data=reconciled_data,
+                reconciled_months=reconciled_months,
+                today=datetime.today())
 
     except Exception as e:
         logger.error(f"Error loading monthly activity: {e}")
@@ -296,6 +319,24 @@ def reconcile_month_close():
                 'reconciled_at': datetime.now().isoformat()
             }).execute()
 
+        # Compute first day of next month as a date string (YYYY-MM-DD)
+        dt = datetime.strptime(month, '%Y-%m-%d').replace(day=1)
+        next_month_date = (dt + timedelta(days=32)).replace(day=1)
+        next_month_str = next_month_date.strftime('%Y-%m-%d')
+
+        # Upsert next month's starting balance (creates row if missing)
+        update_resp = supabase.table('reconciled_months')\
+            .upsert({
+            'month': next_month_str,
+            'starting_balance': closing_balance
+            }, on_conflict='month')\
+            .execute()
+
+        if not update_resp.data:
+            logger.warning(f"Upsert did not return data for month {next_month_str}")
+        else:
+            logger.info(f"Upserted starting_balance for {next_month_str}: {closing_balance}")
+
         return redirect(f'/monthly_activity?month={month[:7]}')
 
     except Exception as e:
@@ -361,7 +402,7 @@ def add_transaction():
             'amount': amount,
             'description': description,
             'payment_method': method,
-        }).eq('id', account_id).execute()
+        }).execute()
 
         # Fetch the current primary balance
         account = supabase.table('accounts').select('primary_account').eq('id', account_id).single().execute()
