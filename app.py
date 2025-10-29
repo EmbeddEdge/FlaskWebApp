@@ -104,10 +104,33 @@ def index():
                 'balance': accounts.get('balance', 0)
             }
 
+        # Fetch a short list of recent reconciled months for the "Previous Month Activity" card
+        try:
+            reconciled_months_resp = supabase.table('reconciled_months')\
+                .select('*')\
+                .eq('is_reconciled', True)\
+                .order('month', desc=True)\
+                .limit(6)\
+                .execute()
+            reconciled_months = reconciled_months_resp.data or []
+        except Exception:
+            reconciled_months = []
+
+        # Format each reconciled month for display and provide a short month string YYYY-MM
+        for rm in reconciled_months:
+            try:
+                rm_date = datetime.strptime(rm.get('month', ''), '%Y-%m-%d')
+                rm['formatted_month'] = rm_date.strftime('%B %Y')
+                rm['month_short'] = rm.get('month', '')[:7]
+            except Exception:
+                rm['formatted_month'] = rm.get('month', '')
+                rm['month_short'] = rm.get('month', '')[:7]
+
         return render_template('overview.html', 
                             accounts=accounts,
                             transactions=transactions,
                             reconciled_data=reconciled_data,
+                            reconciled_months=reconciled_months,
                             today=today)
 
     except Exception as e:
