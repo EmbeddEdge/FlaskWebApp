@@ -163,13 +163,18 @@ def monthly_activity():
             .execute()
         
         transactions = transactions_response.data or []
-        
-        # Calculate monthly totals
-        cash_in = sum(t['amount'] for t in transactions if t['type'] == 'income' and t.get('payment_method') == 'cash')
-        cash_out = sum(t['amount'] for t in transactions if t['type'] == 'expense' and t.get('payment_method') == 'cash')
-        total_income = sum(t['amount'] for t in transactions if t['type'] == 'income')
-        total_expenses = sum(t['amount'] for t in transactions if t['type'] == 'expense')
-        
+  
+        # Defensive: ensure amounts are numeric (replace None with 0) to avoid template formatting errors
+        for t in transactions:
+            if t.get('amount') is None:
+                t['amount'] = 0
+
+        # Calculate monthly totals using safe lookups
+        cash_in = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'income' and t.get('payment_method') == 'cash')
+        cash_out = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'expense' and t.get('payment_method') == 'cash')
+        total_income = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'income')
+        total_expenses = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'expense')
+   
         # Debug logging
         logger.info(f"Account data: {accounts}")
         logger.info(f"Transactions found: {len(transactions)}")
@@ -216,16 +221,29 @@ def monthly_activity():
             except Exception:
                 rm['formatted_month'] = rm.get('month', '')
                 rm['month_short'] = rm.get('month', '')[:7]
-        
-        # If accounts exists, update with calculated values
+        # Helper to coerce None to 0 for numeric fields
+        def _num(x):
+            return x if x is not None else 0
+
+        # Ensure reconciled_data has numeric starting_balance
+        if reconciled_data is None:
+            reconciled_data = {}
+        reconciled_data['starting_balance'] = _num(reconciled_data.get('starting_balance', 0))
+
+        # If accounts exists, update with calculated values and coerce None -> 0 to avoid template errors
         if accounts:
             accounts.update({
-                'cash_in': cash_in,
-                'cash_out': cash_out,
-                'income': total_income,
-                'expenses': total_expenses,
-                'starting_balance': accounts.get('balance', 0) - (total_income - total_expenses)
+                'cash_in': _num(cash_in),
+                'cash_out': _num(cash_out),
+                'income': _num(total_income),
+                'expenses': _num(total_expenses),
+                'starting_balance': _num(accounts.get('balance', 0)) - ( _num(total_income) - _num(total_expenses) )
             })
+
+            # Coerce other account numeric fields that templates may access
+            for k in ['cash_box', 'primary_account', 'balance']:
+                accounts[k] = _num(accounts.get(k, 0))
+
 
         return render_template('monthly_activity.html',
                 accounts=accounts,
