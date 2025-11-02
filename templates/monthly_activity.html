@@ -7,14 +7,6 @@
     <link rel="icon" type="image/png" href="ChocolateChipCookie.png                                            <div class="flex justify-between">
                                                 <span class="text-sm">Expenses:</span>
                                                 <span class="text-sm text-red-600">R{{ "%.2f"|format(transactions.amount if accounts and transactions.type == 'expense' else 0) }}</span>
-                                                {% if accounts %}
-                                                <!-- Debug info (only visible during troubleshooting) -->
-                                                <div class="text-xs text-gray-500">
-                                                    <div>Has accounts: Yes</div>
-                                                    <div>Transaction type: {{ transactions.type if transactions else 'None' }}</div>
-                                                    <div>Amount: {{ transactions.amount if transactions else 'None' }}</div>
-                                                </div>
-                                                {% endif %}
                                             </div>
                                             <div class="border-t border-gray-200 pt-2 mt-2">  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -140,7 +132,7 @@
 </head>
 <body class="bg-gray-100" id="body">
     <!-- Top Header Navigation with Logo and Colored Bar -->
-    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-0.5 cookie-navbar" style="min-height: 32px;">
+    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-0.5 cookie-navbar" style="height: 72px;">
         <div class="flex items-center space-x-4">
             <!-- Logo -->
             <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-28 w-28 object-contain rounded-full shadow -my-3" style="min-height: 64px; min-width: 64px;" />
@@ -159,10 +151,10 @@
         </div>
     </div>
     <!-- Side Panel Navigation -->
-    <div class="flex min-h-screen"> <!-- Wrapper for overall layout -->
+    <div class="flex min-h-screen pt-[80px]"> <!-- Increased top padding for main wrapper -->
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-lg flex flex-col py-6 px-4 fixed h-screen top-[88px]">
-            <!-- Sidebar starts below header with more space -->
+        <aside class="w-64 bg-white shadow-lg flex flex-col py-6 px-4 fixed h-screen top-[80px]">
+            <!-- Sidebar aligned with increased header height -->
             <div class="mb-8">
                 <nav class="flex flex-col space-y-2">
                     <a href="/" class="flex items-center px-3 py-2 rounded-lg text-gray-700 font-medium sidebar-btn">
@@ -189,14 +181,12 @@
             </div>
         </aside>
         <!-- Main Content Wrapper -->
-        <div class="flex-1 ml-64 pt-[88px]"> <!-- Increased padding for header space -->
+        <div class="flex-1 ml-64"> <!-- Main content area -->
 
-    <!-- Main Content -->
+        <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <!-- Account Overview -->
-        <div class="mb-8 pt-6"> <!-- Increased top spacing for the card -->
-            
-            <!-- Month Activity Card -->
+        <div class="mb-8 pt-4"> <!-- Added top padding for card spacing -->            <!-- Month Activity Card -->
             <div class="bg-white overflow-hidden shadow rounded-lg">
                 <div class="p-6">
                     <!-- Header Section -->
