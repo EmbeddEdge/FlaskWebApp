@@ -286,7 +286,7 @@
                             <div class="flex justify-between items-center">
                                 <div>
                                     <p class="font-medium text-gray-900">{{ latest.description }}</p>
-                                    <p class="text-sm text-gray-500">{{ latest.created_at[:10] if latest.created_at else '' }}</p>
+                                    <p class="text-sm text-gray-500">{{ latest.transaction_date[:10] if latest.transaction_date else '' }}</p>
                                 </div>
                                 <span class="px-3 py-1 text-sm font-semibold rounded-full 
                                     {% if latest.type == 'income' %}bg-green-100 text-green-800
