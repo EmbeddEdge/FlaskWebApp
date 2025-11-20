@@ -325,12 +325,19 @@ def reconcile_month_close():
                 .execute()
             transactions = transactions_response.data or []
 
+            reconciled_data = supabase.table('reconciled_months')\
+                .select('starting_balance')\
+                .eq('month', month_start)\
+                .execute()
+            starting_balance = reconciled_data.data[0]['starting_balance'] if reconciled_data.data else 0
+
             total_income = sum(t['amount'] for t in transactions if t.get('type') == 'income')
             total_expenses = sum(t['amount'] for t in transactions if t.get('type') == 'expense')
 
             formatted_month = datetime.strptime(month_start, '%Y-%m-%d').strftime('%B %Y')
 
-            return render_template('reconcile_month.html', month=month_start, formatted_month=formatted_month, total_income=total_income, total_expenses=total_expenses)
+            return render_template('reconcile_month.html', month=month_start, formatted_month=formatted_month,
+                                    total_income=total_income, total_expenses=total_expenses, starting_balance=starting_balance)
 
         # POST - process manual closing balance and mark reconciled
         data = request.form or request.get_json() or {}

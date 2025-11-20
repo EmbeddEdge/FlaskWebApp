@@ -241,7 +241,7 @@
                                             </div>
                                             <div class="border-t border-gray-200 pt-2 mt-2">
                                                 <div class="flex justify-between">
-                                                    <span class="text-sm font-medium">Balance:</span>
+                                                    <span class="text-sm font-medium">Cash Balance:</span>
                                                     <span class="text-lg font-semibold text-gray-900">R{{ "%.2f"|format(accounts.cash_box if accounts else 0) }}</span>
                                                 </div>
                                             </div>
@@ -266,11 +266,15 @@
                                             </div>
                                             <div class="border-t border-gray-200 pt-2 mt-2">
                                                 <div class="flex justify-between">
-                                                    <span class="text-sm font-medium">{% if reconciled_data and reconciled_data.is_reconciled %}End Balance{% else %}Current Balance{% endif %}</span>
-                                                    <span class="text-lg font-bold text-gray-900">R{{ "%.2f"|format(reconciled_data.closing_balance if reconciled_data.is_reconciled else accounts.primary_account if accounts else 0) }}</span>
+                                                    <span class="text-sm font-medium">Primary Balance:</span>
+                                                    <span class="text-lg font-bold text-gray-900">R{{ "%.2f"|format(accounts.primary_account if accounts else 0) }}</span>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="flex justify-left">
+                                                <span class="text-lg font-bold text-gray-500">{% if reconciled_data and reconciled_data.is_reconciled %}End Total:{% else %}Total Balance:{% endif %}</span>
+                                                <span class="text-lg font-bold text-gray-900 ml-10">R{{ "%.2f"|format(reconciled_data.closing_balance if reconciled_data.is_reconciled else accounts.primary_account + accounts.cash_box if accounts else 0) }}</span>
                                     </div>
                                 </div>
                             </div>

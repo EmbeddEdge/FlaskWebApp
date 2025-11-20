@@ -225,6 +225,10 @@
                                         <p class="text-sm font-medium text-gray-500">Primary Account</p>
                                         <p class="text-lg font-semibold text-gray-900">R{{ "%.2f"|format(accounts.primary_account if accounts else 0) }}</p>
                                     </div>
+                                    <div>
+                                        <p class="text-lg font-bold text-gray-500">Total Balance</p>
+                                        <p class="text-lg font-semibold text-gray-900">R{{ "%.2f"|format((accounts.cash_box if accounts else 0) + (accounts.primary_account if accounts else 0)) }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

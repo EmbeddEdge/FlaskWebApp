@@ -19,7 +19,7 @@
       <div class="mb-4">
         <div class="flex justify-between mb-1"><span class="text-sm text-gray-700">Total Income</span><strong>R{{ "%.2f"|format(total_income|default(0)) }}</strong></div>
         <div class="flex justify-between mb-1"><span class="text-sm text-gray-700">Total Expenses</span><strong>R{{ "%.2f"|format(total_expenses|default(0)) }}</strong></div>
-        <div class="flex justify-between mb-1"><span class="text-sm text-gray-700">Calculated Net</span><strong>R{{ "%.2f"|format((total_income|default(0)) - (total_expenses|default(0))) }}</strong></div>
+        <div class="flex justify-between mb-1"><span class="text-sm text-gray-700">Calculated Net</span><strong>R{{ "%.2f"|format((total_income|default(0)) - (total_expenses|default(0)) + (starting_balance|default(0))) }}</strong></div>
       </div>
 
       <form action="/reconcile_month/close" method="POST" class="space-y-4">
