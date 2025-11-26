@@ -1,60 +1,59 @@
-# AutoSave - Product Requirements Document
+# Product Requirements Document
 
 ## Product Overview
-**Vision:** Help users build emergency funds and prevent lifestyle inflation through automated savings psychology without bank integration.
+**Vision:** Small Business Finance Tool to manage a business account and reconcile expenses.
 
-**Target Users:** Working professionals aged 25-45 struggling with consistent savings habits.
+**Target Users:** Small Business owners aged 25-45 struggling with consistent savings habits.
 
 ## Core Problems Solved
-- Insufficient emergency savings (83% of Americans)
-- Lifestyle inflation preventing wealth accumulation
-- Decision fatigue around manual savings transfers
+- Determine profit by tracking expenses
+- Determine profit by tracking income
+- Determine profit by tracking cash flow
 
 ## Key Features
 
-### 1. Smart Savings Calculator
+### 1. Income Calculator
 - Input: Income amount, frequency, current savings
 - Output: Personalized percentage recommendations (1-10%)
 - Progressive increases: +1% every 3 months
 
-### 2. Transfer Notification System
-**Trigger Events:**
-- Payday reminders (user-set schedule)
-- Income logged in app
-- Weekly/monthly goals
+### 2. Expense Calculator
+- Input: Expense amount, frequency, current savings
+- Output: Personalized percentage recommendations (1-10%)
+- Progressive increases: +1% every 3 months
 
-**Notification Content:**
-- "Transfer $127 to Emergency Fund today"
-- One-tap deep links to banking apps
-- Pre-filled transfer amounts
+### 3. Cash Flow Calculator
+- Input: Cash flow amount, frequency, current savings
+- Output: Personalized percentage recommendations (1-10%)
+- Progressive increases: +1% every 3 months
 
-### 3. Progress Tracking
+### 4. Progress Tracking
 **Visual Elements:**
 - Circular progress bars for each savings goal
 - Streak counters (consecutive successful transfers)
 - Monthly/yearly savings totals
 
-**Savings Categories:**
-- Emergency Fund (3-6 months expenses)
+**Profit Categories:**
+- Income (3-6 months expenses)
 - Debt Payoff
 - Retirement Top-up
 
-### 4. Gamification Layer
+### 5. Profit Tracking
 **Achievement System:**
-- First $1000 saved
-- 30-day transfer streak
+- First R1000 saved
+- 30-day profit streak
 - Lifestyle inflation resistance (spending stayed flat)
 
 **Social Features:**
 - Friend challenges
-- Anonymous leaderboards
-- Savings milestone celebrations
+- Leaderboards
+- Profit milestone celebrations
 
 ## Technical Requirements
 
 ### MVP Features
 - Manual income/expense logging
-- Savings calculation engine
+- Profit calculation engine
 - Push notification system
 - Basic progress visualization
 - User account management
@@ -68,12 +67,12 @@
 ## Success Metrics
 **Primary KPIs:**
 - Monthly active users
-- Average savings rate increase
+- Average profit rate increase
 - Transfer completion rate (target: 80%)
 
 **Secondary KPIs:**
 - User retention at 3/6/12 months
-- Emergency fund milestone achievements
+- Profit milestone achievements
 - Net Promoter Score
 
 ## Revenue Model
@@ -83,10 +82,11 @@
 ## Development Phases
 
 ### Phase 1 (8 weeks)
-- Core savings calculator
+- Core profit calculator
 - Manual logging interface
 - Basic notifications
 - Progress visualization
+- Expense tracking
 
 ### Phase 2 (6 weeks)
 - Gamification system
@@ -95,10 +95,11 @@
 
 ### Phase 3 (4 weeks)
 - Advanced analytics
-- Spending tracking
-- Lifestyle inflation alerts
+- Profit tracking
+
+- Profit alerts
 
 ## Risk Mitigation
-- **User adoption:** Focus on single, clear value proposition
+- **User adoption:** Focus on a single, clear value proposition
 - **Engagement drops:** Implement variable reward schedule in notifications
 - **Competition:** Build strong habit-formation psychology vs. feature competition
