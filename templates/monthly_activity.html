@@ -1,151 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Reconciliation Dashboard</title>
-    <link rel="icon" type="image/png" href="ChocolateChipCookie.png                                            <div class="flex justify-between">
-                                                <span class="text-sm">Expenses:</span>
-                                                <span class="text-sm text-red-600">R{{ "%.2f"|format(transactions.amount if accounts and transactions.type == 'expense' else 0) }}</span>
-                                            </div>
-                                            <div class="border-t border-gray-200 pt-2 mt-2">  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Sidebar button hover highlight (cookie theme) */
-        .sidebar-btn {
-            background-color: transparent !important;
-            color: #7c5e3c !important;
-            transition: background 0.2s, color 0.2s;
-        }
-        .sidebar-btn:hover {
-            background-color: #f5c16c !important;
-            color: #7c5e3c !important;
-        }
-        /* Brown Cookie/Baking Theme */
-        body {
-            background-color: #f5ede3;
-        }
-        .bg-white {
-            background-color: #f8f5f2 !important;
-        }
-        .text-gray-900 {
-            color: #5c4033 !important;
-        }
-        .text-gray-700 {
-            color: #7c5e3c !important;
-        }
-        .text-gray-500 {
-            color: #a58a6a !important;
-        }
-        .bg-gray-100 {
-            background-color: #f5ede3 !important;
-        }
-        .bg-blue-100, .bg-blue-200 {
-            background-color: #e2c9b0 !important;
-        }
-        .bg-red-100 {
-            background-color: #b86b4b !important;
-        }
-        .bg-green-100 {
-            background-color: #a3a656 !important;
-        }
-        .bg-gray-50 {
-            background-color: #f8f5f2 !important;
-        }
-        .bg-gray-600 {
-            background-color: #a58a6a !important;
-        }
-        .shadow-lg, .shadow {
-            box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.15)!important;
-        }
-        input, select, textarea {
-            background-color: #f8f5f2 !important;
-            color: #5c4033 !important;
-            border-color: #a58a6a !important;
-        }
-        th.type-col, td.type-col, .type-col span {
-            color: #fff !important;
-        }
-        /* Top nav bar gradient for cookie theme */
-        .cookie-navbar {
-            background: linear-gradient(90deg, #f5c16c 0%, #a97142 100%);
-            box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.07);
-        }
-        .cookie-btn {
-            background-color: #a97142 !important;
-            color: #fff !important;
-            font-size: 0.85rem !important;
-            padding: 0.25rem 0.75rem !important;
-            min-height: 28px !important;
-        }
-        /* Remove logo border in all modes */
-        .cookie-navbar img[alt="Krumble Korner Logo"] {
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
-        }
-        /* Remove logo border in dark mode specifically */
-        .dark-mode .cookie-navbar img[alt="Krumble Korner Logo"] {
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
-        }
-        .cookie-btn:hover {
-            background-color: #7c5e3c !important;
-        }
-        .cookie-secondary-btn {
-            background-color: #f5c16c !important;
-            color: #5c4033 !important;
-            font-size: 0.85rem !important;
-            padding: 0.25rem 0.75rem !important;
-            min-height: 28px !important;
-        }
-        .cookie-secondary-btn:hover {
-            background-color: #e2c9b0 !important;
-        }
-    /* Dark mode overrides for brown theme */
-        .dark-mode {
-            background-color: #3e2723 !important;
-            color: #f3f4f6 !important;
-        }
-        .dark-mode .bg-white { background-color: #5c4033 !important; }
-        .dark-mode .text-gray-900 { color: #f3f4f6 !important; }
-        .dark-mode .text-gray-700 { color: #e2c9b0 !important; }
-        .dark-mode .text-gray-500 { color: #f5c16c !important; }
-        .dark-mode .bg-gray-100 { background-color: #3e2723 !important; }
-        .dark-mode .bg-blue-100, .dark-mode .bg-blue-200 { background-color: #a97142 !important; }
-        .dark-mode .bg-red-100 { background-color: #b86b4b !important; }
-        .dark-mode .bg-green-100 { background-color: #a3a656 !important; }
-        .dark-mode .bg-gray-50 { background-color: #5c4033 !important; }
-        .dark-mode .bg-gray-600 { background-color: #a58a6a !important; }
-        .dark-mode .shadow-lg, .dark-mode .shadow { box-shadow: 0 2px 8px 0 rgba(0,0,0,0.7)!important; }
-        .dark-mode input, .dark-mode select, .dark-mode textarea {
-            background-color: #5c4033 !important;
-            color: #f3f4f6 !important;
-            border-color: #f5c16c !important;
-        }
-        .dark-mode th.type-col, .dark-mode td.type-col, .dark-mode .type-col span {
-            color: #fff !important;
-        }
-    </style>
+    <link rel="icon" type="image/png"
+        href="ChocolateChipCookie.png                                            <div class=" flex justify-between">
+    <span class="text-sm">Expenses:</span>
+    <span class="text-sm text-red-600">R{{ "%.2f"|format(transactions.amount if accounts and transactions.type ==
+        'expense' else 0) }}</span>
+    </div>
+    <div class="border-t border-gray-200 pt-2 mt-2">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            /* Sidebar button hover highlight (cookie theme) */
+            .sidebar-btn {
+                background-color: transparent !important;
+                color: #7c5e3c !important;
+                transition: background 0.2s, color 0.2s;
+            }
+
+            .sidebar-btn:hover {
+                background-color: #f5c16c !important;
+                color: #7c5e3c !important;
+            }
+
+            /* Brown Cookie/Baking Theme */
+            body {
+                background-color: #f5ede3;
+            }
+
+            .bg-white {
+                background-color: #f8f5f2 !important;
+            }
+
+            .text-gray-900 {
+                color: #5c4033 !important;
+            }
+
+            .text-gray-700 {
+                color: #7c5e3c !important;
+            }
+
+            .text-gray-500 {
+                color: #a58a6a !important;
+            }
+
+            .bg-gray-100 {
+                background-color: #f5ede3 !important;
+            }
+
+            .bg-blue-100,
+            .bg-blue-200 {
+                background-color: #e2c9b0 !important;
+            }
+
+            .bg-red-100 {
+                background-color: #b86b4b !important;
+            }
+
+            .bg-green-100 {
+                background-color: #a3a656 !important;
+            }
+
+            .bg-gray-50 {
+                background-color: #f8f5f2 !important;
+            }
+
+            .bg-gray-600 {
+                background-color: #a58a6a !important;
+            }
+
+            .shadow-lg,
+            .shadow {
+                box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.15) !important;
+            }
+
+            input,
+            select,
+            textarea {
+                background-color: #f8f5f2 !important;
+                color: #5c4033 !important;
+                border-color: #a58a6a !important;
+            }
+
+            th.type-col,
+            td.type-col,
+            .type-col span {
+                color: #fff !important;
+            }
+
+            /* Top nav bar gradient for cookie theme */
+            .cookie-navbar {
+                background: linear-gradient(90deg, #f5c16c 0%, #a97142 100%);
+                box-shadow: 0 2px 8px 0 rgba(92, 64, 51, 0.07);
+            }
+
+            .cookie-btn {
+                background-color: #a97142 !important;
+                color: #fff !important;
+                font-size: 0.85rem !important;
+                padding: 0.25rem 0.75rem !important;
+                min-height: 28px !important;
+            }
+
+            /* Remove logo border in all modes */
+            .cookie-navbar img[alt="Krumble Korner Logo"] {
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+            }
+
+            /* Remove logo border in dark mode specifically */
+            .dark-mode .cookie-navbar img[alt="Krumble Korner Logo"] {
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+            }
+
+            .cookie-btn:hover {
+                background-color: #7c5e3c !important;
+            }
+
+            .cookie-secondary-btn {
+                background-color: #f5c16c !important;
+                color: #5c4033 !important;
+                font-size: 0.85rem !important;
+                padding: 0.25rem 0.75rem !important;
+                min-height: 28px !important;
+            }
+
+            .cookie-secondary-btn:hover {
+                background-color: #e2c9b0 !important;
+            }
+
+            /* Dark mode overrides for brown theme */
+            .dark-mode {
+                background-color: #3e2723 !important;
+                color: #f3f4f6 !important;
+            }
+
+            .dark-mode .bg-white {
+                background-color: #5c4033 !important;
+            }
+
+            .dark-mode .text-gray-900 {
+                color: #f3f4f6 !important;
+            }
+
+            .dark-mode .text-gray-700 {
+                color: #e2c9b0 !important;
+            }
+
+            .dark-mode .text-gray-500 {
+                color: #f5c16c !important;
+            }
+
+            .dark-mode .bg-gray-100 {
+                background-color: #3e2723 !important;
+            }
+
+            .dark-mode .bg-blue-100,
+            .dark-mode .bg-blue-200 {
+                background-color: #a97142 !important;
+            }
+
+            .dark-mode .bg-red-100 {
+                background-color: #b86b4b !important;
+            }
+
+            .dark-mode .bg-green-100 {
+                background-color: #a3a656 !important;
+            }
+
+            .dark-mode .bg-gray-50 {
+                background-color: #5c4033 !important;
+            }
+
+            .dark-mode .bg-gray-600 {
+                background-color: #a58a6a !important;
+            }
+
+            .dark-mode .shadow-lg,
+            .dark-mode .shadow {
+                box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.7) !important;
+            }
+
+            .dark-mode input,
+            .dark-mode select,
+            .dark-mode textarea {
+                background-color: #5c4033 !important;
+                color: #f3f4f6 !important;
+                border-color: #f5c16c !important;
+            }
+
+            .dark-mode th.type-col,
+            .dark-mode td.type-col,
+            .dark-mode .type-col span {
+                color: #fff !important;
+            }
+        </style>
 </head>
+
 <body class="bg-gray-100" id="body">
     <!-- Top Header Navigation with Logo and Colored Bar -->
-    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-0.5 cookie-navbar" style="height: 72px;">
+    <div class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-0.5 cookie-navbar"
+        style="height: 72px;">
         <div class="flex items-center space-x-4">
             <!-- Logo -->
-            <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo" class="h-28 w-28 object-contain rounded-full shadow -my-3" style="min-height: 64px; min-width: 64px;" />
+            <img src="{{ url_for('static', filename='KrumbleKornerLogo.png') }}" alt="Krumble Korner Logo"
+                class="h-28 w-28 object-contain rounded-full shadow -my-3" style="min-height: 64px; min-width: 64px;" />
             <h2 class="text-xl font-bold" style="color: #5c4033;">Secondary Account Tracker - Cloud Version</h2>
         </div>
         <div class="flex items-center space-x-2">
             <button id="reportsBtn" class="cookie-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
                 <i class="fas fa-chart-line mr-2"></i> Reports
             </button>
-            <button id="languageBtn" class="cookie-secondary-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
+            <button id="languageBtn"
+                class="cookie-secondary-btn px-4 py-2 rounded shadow focus:outline-none flex items-center">
                 <i class="fas fa-language mr-2"></i> Language
             </button>
-            <button id="darkModeToggle" class="cookie-btn px-4 py-2 rounded shadow hover:bg-yellow-700 focus:outline-none flex items-center">
+            <button id="darkModeToggle"
+                class="cookie-btn px-4 py-2 rounded shadow hover:bg-yellow-700 focus:outline-none flex items-center">
                 <i class="fas fa-moon"></i> <span id="darkModeText" class="ml-2">Dark Mode</span>
             </button>
         </div>
@@ -160,22 +239,27 @@
                     <a href="/" class="flex items-center px-3 py-2 rounded-lg text-gray-700 font-medium sidebar-btn">
                         <i class="fas fa-tachometer-alt mr-2"></i> Overview Dashboard
                     </a>
-                    <a href="/account/setup" class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
+                    <a href="/account/setup"
+                        class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
                         <i class="fas fa-user-cog mr-2"></i> Account Setup
                     </a>
-                    <a href="/account/dashboard" class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
+                    <a href="/account/dashboard"
+                        class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
                         <i class="fas fa-chart-bar mr-2"></i> Dashboard
                     </a>
-                    <a href="/account/sales" class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
+                    <a href="/account/sales"
+                        class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
                         <i class="fas fa-chart-line mr-2"></i> Sales Report
                     </a>
-                    <a href="/account/payouts" class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
+                    <a href="/account/payouts"
+                        class="flex items-center px-3 py-2 rounded-lg text-gray-700  font-medium sidebar-btn">
                         <i class="fas fa-money-bill-wave mr-2"></i> Payouts Page
                     </a>
                 </nav>
             </div>
             <div class="mt-auto">
-                <a href="#" class="flex items-center px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 font-medium">
+                <a href="#"
+                    class="flex items-center px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 font-medium">
                     <i class="fas fa-cog mr-2"></i> Settings
                 </a>
             </div>
@@ -183,426 +267,482 @@
         <!-- Main Content Wrapper -->
         <div class="flex-1 ml-64"> <!-- Main content area -->
 
-        <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
-        <!-- Account Overview -->
-        <div class="mb-8 pt-4"> <!-- Added top padding for card spacing -->            <!-- Month Activity Card -->
-            <div class="bg-white overflow-hidden shadow rounded-lg">
-                <div class="p-6">
-                    <!-- Header Section -->
-                    <div class="flex justify-between items-center mb-4">
-                        <div>
-                            <a href="/monthly_activity" class="group hover:opacity-80 transition-opacity">
-                                <h2 id="monthActivityTitle" class="text-2xl font-bold text-gray-900 group-hover:underline">Month Activity: {{ reconciled_data.formatted_month if reconciled_data and reconciled_data.formatted_month else 'Current' }}</h2>
-                                <p class="text-sm text-gray-500 mt-1">As of {{ today.strftime('%d %B %Y') }}</p>
-                            </a>
-                        </div>
-                        <button onclick="openAddTransactionModal()" class="cookie-btn font-bold py-2 px-4 rounded">
-                            <i class="fas fa-plus"></i> Add Transaction
-                        </button>
-                    </div>
-
-                    <!-- Current Balances Section -->
-                    <div class="mb-6">
-                        <!-- Reconciliation Status -->
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="flex items-center gap-3">
-                                <i class="fas fa-wallet text-blue-500 text-3xl"></i>
-                                <h3 class="text-lg font-semibold text-gray-900">Month Overview</h3>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm {% if reconciled_data.is_reconciled %}text-green-600{% else %}text-yellow-600{% endif %}">
-                                    <i class="fas {% if reconciled_data.is_reconciled %}fa-check-circle{% else %}fa-clock{% endif %} mr-1"></i>
-                                    {{ "Reconciled" if reconciled_data.is_reconciled else "Pending Reconciliation" }}
-                                </span>
+            <!-- Main Content -->
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <!-- Account Overview -->
+                <div class="mb-8 pt-4"> <!-- Added top padding for card spacing --> <!-- Month Activity Card -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-6">
+                            <!-- Header Section -->
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <a href="/monthly_activity" class="group hover:opacity-80 transition-opacity">
+                                        <h2 id="monthActivityTitle"
+                                            class="text-2xl font-bold text-gray-900 group-hover:underline">Month
+                                            Activity: {{ reconciled_data.formatted_month if reconciled_data and
+                                            reconciled_data.formatted_month else 'Current' }}</h2>
+                                        <p class="text-sm text-gray-500 mt-1">As of {{ today.strftime('%d %B %Y') }}</p>
+                                    </a>
+                                </div>
                                 {% if not reconciled_data.is_reconciled %}
-                                <!-- Navigate to a dedicated reconciliation page where the user can input the closing balance -->
-                                <a href="/reconcile_month/close?month={{ reconciled_data.month[:10] if reconciled_data and reconciled_data.month else today.strftime('%Y-%m-01') }}" class="cookie-btn font-bold py-1 px-3 rounded text-sm">
-                                    <i class="fas fa-check mr-1"></i> Reconcile Month
-                                </a>
+                                <button onclick="openAddTransactionModal()"
+                                    class="cookie-btn font-bold py-2 px-4 rounded">
+                                    <i class="fas fa-plus"></i> Add Transaction
+                                </button>
                                 {% endif %}
                             </div>
-                        </div>
 
-                        <div class="flex items-start">
-                            <div class="ml-4 flex-grow">
-                                <div class="grid grid-cols-2 gap-8">
-                                    <!-- Cash Box Section -->
-                                    <div class="bg-gray-50 p-4 rounded-lg">
-                                        <p class="text-sm font-medium text-gray-500 mb-3">Cash Box</p>
-                                        <div class="space-y-2">
-                                            <div class="flex justify-between">
-                                                <span class="text-sm">Cash In:</span>
-                                                <span class="text-sm text-green-600">R{{ "%.2f"|format(accounts.cash_in if accounts else 0) }}</span>
-                                            </div>
-                                            <div class="flex justify-between">
-                                                <span class="text-sm">Cash Out:</span>
-                                                <span class="text-sm text-red-600">R{{ "%.2f"|format(accounts.cash_out if accounts else 0) }}</span>
-                                            </div>
-                                            <div class="border-t border-gray-200 pt-2 mt-2">
-                                                <div class="flex justify-between">
-                                                    <span class="text-sm font-medium">Cash Balance:</span>
-                                                    <span class="text-lg font-semibold text-gray-900">R{{ "%.2f"|format(accounts.cash_box if accounts else 0) }}</span>
+                            <!-- Current Balances Section -->
+                            <div class="mb-6">
+                                <!-- Reconciliation Status -->
+                                <div class="flex justify-between items-center mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fas fa-wallet text-blue-500 text-3xl"></i>
+                                        <h3 class="text-lg font-semibold text-gray-900">Month Overview</h3>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span
+                                            class="text-sm {% if reconciled_data.is_reconciled %}text-green-600{% else %}text-yellow-600{% endif %}">
+                                            <i
+                                                class="fas {% if reconciled_data.is_reconciled %}fa-check-circle{% else %}fa-clock{% endif %} mr-1"></i>
+                                            {{ "Reconciled" if reconciled_data.is_reconciled else "Pending
+                                            Reconciliation" }}
+                                        </span>
+                                        {% if not reconciled_data.is_reconciled %}
+                                        <!-- Navigate to a dedicated reconciliation page where the user can input the closing balance -->
+                                        <a href="/reconcile_month/close?month={{ reconciled_data.month[:10] if reconciled_data and reconciled_data.month else today.strftime('%Y-%m-01') }}"
+                                            class="cookie-btn font-bold py-1 px-3 rounded text-sm">
+                                            <i class="fas fa-check mr-1"></i> Reconcile Month
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start">
+                                    <div class="ml-4 flex-grow">
+                                        <div class="grid grid-cols-2 gap-8">
+                                            <!-- Cash Box Section -->
+                                            <div class="bg-gray-50 p-4 rounded-lg">
+                                                <p class="text-sm font-medium text-gray-500 mb-3">Cash Box</p>
+                                                <div class="space-y-2">
+                                                    <div class="flex justify-between">
+                                                        <span class="text-sm">Starting Balance:</span>
+                                                        <span class="text-sm">R{{
+                                                            "%.2f"|format(reconciled_data.starting_cash if accounts
+                                                            else 0) }}</span>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <span class="text-sm">Cash In:</span>
+                                                        <span class="text-sm text-green-600">R{{
+                                                            "%.2f"|format(accounts.cash_in if accounts else 0) }}</span>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <span class="text-sm">Cash Out:</span>
+                                                        <span class="text-sm text-red-600">R{{
+                                                            "%.2f"|format(accounts.cash_out if accounts else 0)
+                                                            }}</span>
+                                                    </div>
+                                                    <div class="border-t border-gray-200 pt-2 mt-2">
+                                                        <div class="flex justify-between">
+                                                            <span class="text-sm font-medium">Cash Balance:</span>
+                                                            <span class="text-lg font-semibold text-gray-900">R{{
+                                                                "%.2f"|format(reconciled_data.closing_cash if
+                                                                reconciled_data.is_reconciled else accounts.cash_box if
+                                                                accounts else 0)
+                                                                }}</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    <!-- Primary Account Section -->
-                                    <div class="bg-gray-50 p-4 rounded-lg">
-                                        <p class="text-sm font-medium text-gray-500 mb-3">Primary Account</p>
-                                        <div class="space-y-2">
-                                            <div class="flex justify-between">
-                                                <span class="text-sm">Starting Balance:</span>
-                                                <span class="text-sm">R{{ "%.2f"|format(reconciled_data.starting_balance if accounts else 0) }}</span>
-                                            </div>
-                                            <div class="flex justify-between">
-                                                <span class="text-sm">Income:</span>
-                                                <span class="text-sm text-green-600">R{{ "%.2f"|format(accounts.income if accounts else 0) }}</span>
-                                            </div>
-                                            <div class="flex justify-between">
-                                                <span class="text-sm">Expenses:</span>
-                                                <span class="text-sm text-red-600">R{{ "%.2f"|format(accounts.expenses if accounts else 0) }}</span>
-                                            </div>
-                                            <div class="border-t border-gray-200 pt-2 mt-2">
-                                                <div class="flex justify-between">
-                                                    <span class="text-sm font-medium">Primary Balance:</span>
-                                                    <span class="text-lg font-bold text-gray-900">R{{ "%.2f"|format(accounts.primary_account if accounts else 0) }}</span>
+                                            <!-- Primary Account Section -->
+                                            <div class="bg-gray-50 p-4 rounded-lg">
+                                                <p class="text-sm font-medium text-gray-500 mb-3">Primary Account</p>
+                                                <div class="space-y-2">
+                                                    <div class="flex justify-between">
+                                                        <span class="text-sm">Starting Balance:</span>
+                                                        <span class="text-sm">R{{
+                                                            "%.2f"|format(reconciled_data.starting_balance if accounts
+                                                            else 0) }}</span>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <span class="text-sm">Income:</span>
+                                                        <span class="text-sm text-green-600">R{{
+                                                            "%.2f"|format(accounts.income if accounts else 0) }}</span>
+                                                    </div>
+                                                    <div class="flex justify-between">
+                                                        <span class="text-sm">Expenses:</span>
+                                                        <span class="text-sm text-red-600">R{{
+                                                            "%.2f"|format(accounts.expenses if accounts else 0)
+                                                            }}</span>
+                                                    </div>
+                                                    <div class="border-t border-gray-200 pt-2 mt-2">
+                                                        <div class="flex justify-between">
+                                                            <span class="text-sm font-medium">Primary Balance:</span>
+                                                            <span class="text-lg font-bold text-gray-900">R{{
+                                                                "%.2f"|format(reconciled_data.closing_balance if
+                                                                reconciled_data.is_reconciled else
+                                                                (accounts.primary_account if accounts else 0)) }}</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="flex justify-left">
+                                                <span class="text-lg font-bold text-gray-500">{% if reconciled_data and
+                                                    reconciled_data.is_reconciled %}End Total:{% else %}Total Balance:{%
+                                                    endif %}</span>
+                                                <span class="text-lg font-bold text-gray-900 ml-10">R{{
+                                                    "%.2f"|format(reconciled_data.closing_balance if
+                                                    reconciled_data.is_reconciled else accounts.primary_account +
+                                                    accounts.cash_box if accounts else 0) }}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex justify-left">
-                                                <span class="text-lg font-bold text-gray-500">{% if reconciled_data and reconciled_data.is_reconciled %}End Total:{% else %}Total Balance:{% endif %}</span>
-                                                <span class="text-lg font-bold text-gray-900 ml-10">R{{ "%.2f"|format(reconciled_data.closing_balance if reconciled_data.is_reconciled else accounts.primary_account + accounts.cash_box if accounts else 0) }}</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- Last Transaction Section -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Last Transaction</h3>
-                        {% if transactions and transactions|length > 0 %}
-                        {% set latest = transactions[0] %}
-                        <div class="bg-gray-50 rounded-lg p-3">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ latest.description }}</p>
-                                    <p class="text-sm text-gray-500">{{ latest.transaction_date[:10] if latest.transaction_date else '' }}</p>
-                                </div>
-                                <span class="px-3 py-1 text-sm font-semibold rounded-full 
+                            <!-- Last Transaction Section -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">Last Transaction</h3>
+                                {% if transactions and transactions|length > 0 %}
+                                {% set latest = transactions[0] %}
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <p class="font-medium text-gray-900">{{ latest.description }}</p>
+                                            <p class="text-sm text-gray-500">{{ latest.transaction_date[:10] if
+                                                latest.transaction_date else '' }}</p>
+                                        </div>
+                                        <span class="px-3 py-1 text-sm font-semibold rounded-full 
                                     {% if latest.type == 'income' %}bg-green-100 text-green-800
                                     {% elif latest.type == 'expense' %}bg-red-100 text-red-800
                                     {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                    R{{ "%.2f"|format(latest.amount) }}
-                                </span>
+                                            R{{ "%.2f"|format(latest.amount) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <p class="text-gray-500 text-sm">No recent transactions</p>
+                                {% endif %}
                             </div>
                         </div>
-                        {% else %}
-                        <p class="text-gray-500 text-sm">No recent transactions</p>
-                        {% endif %}
                     </div>
-                </div>
-            </div>
 
-            <!-- All the months Transactions -->
-            <div class="mb-8 mt-8 pt-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-semibold text-gray-900">Total Monthly Activities</h2>
-                </div>
-                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-col">Type</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            {% for transaction in transactions %}
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ transaction.transaction_date[:10] if transaction.transaction_date else '' }}
-                                    <button onclick="openEditDateModal('{{ transaction.id }}', '{{ transaction.transaction_date[:10] if transaction.transaction_date else '' }}')" 
-                                            class="ml-2 text-blue-600 hover:text-blue-800">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ transaction.description }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 type-col">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                    <!-- All the months Transactions -->
+                    <div class="mb-8 mt-8 pt-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-semibold text-gray-900">Total Monthly Activities</h2>
+                        </div>
+                        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Date</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Description</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-col">
+                                            Type</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for transaction in transactions %}
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ transaction.transaction_date[:10] if transaction.transaction_date else ''
+                                            }}
+                                            <button
+                                                onclick="openEditDateModal('{{ transaction.id }}', '{{ transaction.transaction_date[:10] if transaction.transaction_date else '' }}')"
+                                                class="ml-2 text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{ transaction.description }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 type-col">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                         {% if transaction.type == 'income' %}bg-green-100 text-green-800
                                         {% elif transaction.type == 'expense' %}bg-red-100 text-red-800
                                         {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                        {{ transaction.type }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm 
+                                                {{ transaction.type }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm 
                                     {% if transaction.type == 'income' %}text-green-600
                                     {% elif transaction.type == 'expense' %}text-red-600
                                     {% else %}text-gray-900{% endif %}">
-                                    {{ "R%.2f"|format(transaction.amount) }}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                            {{ "R%.2f"|format(transaction.amount) }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Add Transaction Modal -->
+            <div id="addTransactionModal"
+                class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3 text-center">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Add Transaction</h3>
+                        <form action="/transactions/add" method="POST" class="mt-4">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="type">
+                                    Type
+                                </label>
+                                <select name="type" id="type"
+                                    class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                                    <option value="income">Income</option>
+                                    <option value="expense">Expense</option>
+                                    <option value="transfer">Transfer</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+                                    Amount
+                                </label>
+                                <input type="number" step="0.01" name="amount" id="amount"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                                    required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                                    Description
+                                </label>
+                                <input type="text" name="description" id="description"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="method">
+                                    Method
+                                </label>
+                                <select name="method" id="method"
+                                    class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                                    <option value="cash">Cash</option>
+                                    <option value="bank">Bank</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="transaction_date">
+                                    Transaction Date
+                                </label>
+                                <input type="date" name="transaction_date" id="transaction_date"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                                    required>
+                            </div>
+                            <script>
+                                // Set up date input restrictions
+                                const transactionDateInput = document.getElementById('transaction_date');
+
+                                // Calculate date ranges
+                                const today = new Date();
+                                const maxDate = today.toISOString().split('T')[0];  // Today
+
+                                // Set minimum date to first day of previous year
+                                const minDate = new Date(today.getFullYear() - 1, 0, 1).toISOString().split('T')[0];
+
+                                // Set the restrictions
+                                transactionDateInput.setAttribute('max', maxDate);
+                                transactionDateInput.setAttribute('min', minDate);
+
+                                // Set default value to today
+                                transactionDateInput.value = maxDate;
+
+                                // Validate date when changed
+                                transactionDateInput.addEventListener('change', function (e) {
+                                    const selectedDate = new Date(this.value);
+                                    if (selectedDate > today) {
+                                        alert('Cannot select a future date');
+                                        this.value = maxDate;
+                                    }
+                                    if (selectedDate < new Date(minDate)) {
+                                        alert('Cannot select a date before ' + minDate);
+                                        this.value = maxDate;
+                                    }
+                                });
+                            </script>
+                            <div class="flex items-center justify-between mt-4">
+                                <button type="button" onclick="closeAddTransactionModal()"
+                                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Add Transaction
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
-
-    <!-- Add Transaction Modal -->
-    <div id="addTransactionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Add Transaction</h3>
-                <form action="/transactions/add" method="POST" class="mt-4">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="type">
-                            Type
-                        </label>
-                        <select name="type" id="type" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
-                            <option value="income">Income</option>
-                            <option value="expense">Expense</option>
-                            <option value="transfer">Transfer</option>
-                        </select>
+            <!-- Add Goal Modal -->
+            <div id="addGoalModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3 text-center">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Add Savings Goal</h3>
+                        <form action="/goals/add" method="POST" class="mt-4">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                                    Goal Name
+                                </label>
+                                <input type="text" name="name" id="name"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                                    required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="target_amount">
+                                    Target Amount
+                                </label>
+                                <input type="number" step="0.01" name="target_amount" id="target_amount"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                                    required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+                                    Category
+                                </label>
+                                <select name="category" id="category"
+                                    class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                                    <option value="emergency">Emergency Fund</option>
+                                    <option value="debt">Debt Payoff</option>
+                                    <option value="retirement">Retirement</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center justify-between mt-4">
+                                <button type="button" onclick="closeAddGoalModal()"
+                                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Add Goal
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
-                            Amount
-                        </label>
-                        <input type="number" step="0.01" name="amount" id="amount" 
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-                            Description
-                        </label>
-                        <input type="text" name="description" id="description" 
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="method">
-                            Method
-                        </label>
-                        <select name="method" id="method" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
-                            <option value="cash">Cash</option>
-                            <option value="bank">Bank</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="transaction_date">
-                            Transaction Date
-                        </label>
-                        <input type="date" name="transaction_date" id="transaction_date" 
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" required>
-                    </div>
-                    <script>
-                        // Set up date input restrictions
-                        const transactionDateInput = document.getElementById('transaction_date');
-                        
-                        // Calculate date ranges
-                        const today = new Date();
-                        const maxDate = today.toISOString().split('T')[0];  // Today
-                        
-                        // Set minimum date to first day of previous year
-                        const minDate = new Date(today.getFullYear() - 1, 0, 1).toISOString().split('T')[0];
-                        
-                        // Set the restrictions
-                        transactionDateInput.setAttribute('max', maxDate);
-                        transactionDateInput.setAttribute('min', minDate);
-                        
-                        // Set default value to today
-                        transactionDateInput.value = maxDate;
-                        
-                        // Validate date when changed
-                        transactionDateInput.addEventListener('change', function(e) {
-                            const selectedDate = new Date(this.value);
-                            if (selectedDate > today) {
-                                alert('Cannot select a future date');
-                                this.value = maxDate;
-                            }
-                            if (selectedDate < new Date(minDate)) {
-                                alert('Cannot select a date before ' + minDate);
-                                this.value = maxDate;
-                            }
-                        });
-                    </script>
-                    <div class="flex items-center justify-between mt-4">
-                        <button type="button" onclick="closeAddTransactionModal()" 
-                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                            Cancel
-                        </button>
-                        <button type="submit" 
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Add Transaction
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Add Goal Modal -->
-    <div id="addGoalModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Add Savings Goal</h3>
-                <form action="/goals/add" method="POST" class="mt-4">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                            Goal Name
-                        </label>
-                        <input type="text" name="name" id="name" 
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="target_amount">
-                            Target Amount
-                        </label>
-                        <input type="number" step="0.01" name="target_amount" id="target_amount" 
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
-                            Category
-                        </label>
-                        <select name="category" id="category" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
-                            <option value="emergency">Emergency Fund</option>
-                            <option value="debt">Debt Payoff</option>
-                            <option value="retirement">Retirement</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center justify-between mt-4">
-                        <button type="button" onclick="closeAddGoalModal()" 
-                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                            Cancel
-                        </button>
-                        <button type="submit" 
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Add Goal
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openAddTransactionModal() {
-            document.getElementById('addTransactionModal').classList.remove('hidden');
-        }
-
-        function closeAddTransactionModal() {
-            document.getElementById('addTransactionModal').classList.add('hidden');
-        }
-
-        function openAddGoalModal() {
-            document.getElementById('addGoalModal').classList.remove('hidden');
-        }
-
-        function closeAddGoalModal() {
-            document.getElementById('addGoalModal').classList.add('hidden');
-        }
-
-        function reconcileMonth() {
-            if (confirm('Are you sure you want to reconcile this month? This action cannot be undone.')) {
-                // Get the reconciled data element and extract the formatted month
-                const monthText = document.querySelector('#monthActivityTitle').textContent;
-                console.log('Found h2 text:', monthText); // Debug line 1
-                // Extract the month name (e.g., "Month Activity: August 2025")
-                const match = monthText.match(/Month Activity:\s*(\w+\s+\d{4})/);
-                console.log('Regex match result:', match); // Debug line 2
-                if (!match || !match[1]) {
-                    alert('Could not determine the current month. Please refresh the page and try again.');
-                    return;
-                }
-                
-                // Convert month name to YYYY-MM-DD format
-                const monthPart = match[1].trim();
-                console.log('Month part:', monthPart); // Debug the extracted month and year
-
-                // Split the month name and year
-                const [monthName, yearStr] = monthPart.split(' ');
-                console.log('Month name:', monthName, 'Year:', yearStr);
-
-                // Convert month name to month number (0-11)
-                const months = {
-                    'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
-                    'July': 6, 'August': 7, 'September': 8, 'October': 9, 'November': 10, 'December': 11
-                };
-                
-                const monthIndex = months[monthName];
-                if (monthIndex === undefined) {
-                    throw new Error(`Invalid month name: ${monthName}`);
+            <script>
+                function openAddTransactionModal() {
+                    document.getElementById('addTransactionModal').classList.remove('hidden');
                 }
 
-                // Create date using the numeric constructor
-                const date = new Date(parseInt(yearStr), monthIndex, 1);
-                console.log('Created date:', date);
-
-                if (isNaN(date.getTime())) {
-                    throw new Error("Failed to create valid date");
+                function closeAddTransactionModal() {
+                    document.getElementById('addTransactionModal').classList.add('hidden');
                 }
 
-                // Extract year and month, pad month with leading zero
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, "0");
+                function openAddGoalModal() {
+                    document.getElementById('addGoalModal').classList.remove('hidden');
+                }
 
-                const formattedDate = `${year}-${month}-01`;
+                function closeAddGoalModal() {
+                    document.getElementById('addGoalModal').classList.add('hidden');
+                }
 
-                console.log('Formatted date:', formattedDate); // Debug the final formatted date
-                console.log('Created date:', date);
-                
-                // Submit to the server
-                fetch('/reconcile_month', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ month: formattedDate })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Failed to reconcile month: ' + data.error);
+                function reconcileMonth() {
+                    if (confirm('Are you sure you want to reconcile this month? This action cannot be undone.')) {
+                        // Get the reconciled data element and extract the formatted month
+                        const monthText = document.querySelector('#monthActivityTitle').textContent;
+                        console.log('Found h2 text:', monthText); // Debug line 1
+                        // Extract the month name (e.g., "Month Activity: August 2025")
+                        const match = monthText.match(/Month Activity:\s*(\w+\s+\d{4})/);
+                        console.log('Regex match result:', match); // Debug line 2
+                        if (!match || !match[1]) {
+                            alert('Could not determine the current month. Please refresh the page and try again.');
+                            return;
+                        }
+
+                        // Convert month name to YYYY-MM-DD format
+                        const monthPart = match[1].trim();
+                        console.log('Month part:', monthPart); // Debug the extracted month and year
+
+                        // Split the month name and year
+                        const [monthName, yearStr] = monthPart.split(' ');
+                        console.log('Month name:', monthName, 'Year:', yearStr);
+
+                        // Convert month name to month number (0-11)
+                        const months = {
+                            'January': 0, 'February': 1, 'March': 2, 'April': 3, 'May': 4, 'June': 5,
+                            'July': 6, 'August': 7, 'September': 8, 'October': 9, 'November': 10, 'December': 11
+                        };
+
+                        const monthIndex = months[monthName];
+                        if (monthIndex === undefined) {
+                            throw new Error(`Invalid month name: ${monthName}`);
+                        }
+
+                        // Create date using the numeric constructor
+                        const date = new Date(parseInt(yearStr), monthIndex, 1);
+                        console.log('Created date:', date);
+
+                        if (isNaN(date.getTime())) {
+                            throw new Error("Failed to create valid date");
+                        }
+
+                        // Extract year and month, pad month with leading zero
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, "0");
+
+                        const formattedDate = `${year}-${month}-01`;
+
+                        console.log('Formatted date:', formattedDate); // Debug the final formatted date
+                        console.log('Created date:', date);
+
+                        // Submit to the server
+                        fetch('/reconcile_month', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ month: formattedDate })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    location.reload();
+                                } else {
+                                    alert('Failed to reconcile month: ' + data.error);
+                                }
+                            })
+                            .catch(error => {
+                                alert('Error reconciling month: ' + error);
+                            });
                     }
-                })
-                .catch(error => {
-                    alert('Error reconciling month: ' + error);
-                });
-            }
-        }
+                }
 
-        // Dark mode toggle
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const body = document.getElementById('body');
-        const darkModeText = document.getElementById('darkModeText');
-        let darkMode = false;
-        darkModeToggle.addEventListener('click', function() {
-            darkMode = !darkMode;
-            if (darkMode) {
-                body.classList.add('dark-mode');
-                darkModeText.textContent = 'Light Mode';
-                darkModeToggle.querySelector('i').classList.remove('fa-moon');
-                darkModeToggle.querySelector('i').classList.add('fa-sun');
-            } else {
-                body.classList.remove('dark-mode');
-                darkModeText.textContent = 'Dark Mode';
-                darkModeToggle.querySelector('i').classList.remove('fa-sun');
-                darkModeToggle.querySelector('i').classList.add('fa-moon');
-            }
-        });
-    </script>
+                // Dark mode toggle
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                const body = document.getElementById('body');
+                const darkModeText = document.getElementById('darkModeText');
+                let darkMode = false;
+                darkModeToggle.addEventListener('click', function () {
+                    darkMode = !darkMode;
+                    if (darkMode) {
+                        body.classList.add('dark-mode');
+                        darkModeText.textContent = 'Light Mode';
+                        darkModeToggle.querySelector('i').classList.remove('fa-moon');
+                        darkModeToggle.querySelector('i').classList.add('fa-sun');
+                    } else {
+                        body.classList.remove('dark-mode');
+                        darkModeText.textContent = 'Dark Mode';
+                        darkModeToggle.querySelector('i').classList.remove('fa-sun');
+                        darkModeToggle.querySelector('i').classList.add('fa-moon');
+                    }
+                });
+            </script>
 </body>
+
 </html>
