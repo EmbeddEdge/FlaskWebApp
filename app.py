@@ -147,12 +147,19 @@ def monthly_activity():
         account_response = supabase.table('accounts').select('*').eq('id', 1).execute()
         accounts = account_response.data[0] if account_response.data else None
         
-
         # Get the month we're looking at (either from request or default to current)
         selected_month = request.args.get('month', datetime.today().strftime('%Y-%m'))
         
         # Convert selected_month to datetime for comparison
         month_date = datetime.strptime(selected_month, '%Y-%m')
+
+        # Fetch starting_balance and starting_cash from reconciled_months
+        starting_balance_response = supabase.table('reconciled_months')\
+            .select('*')\
+            .eq('month', month_date.strftime('%Y-%m-%d'))\
+            .execute()
+        
+        starting_balance = starting_balance_response.data[0] if starting_balance_response.data else None
         
         # Fetch monthly transactions and calculate summaries
         transactions_response = supabase.table('transactions')\
@@ -172,8 +179,15 @@ def monthly_activity():
         # Calculate monthly totals using safe lookups
         cash_in = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'income' and t.get('payment_method') == 'cash')
         cash_out = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'expense' and t.get('payment_method') == 'cash')
-        total_income = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'income')
-        total_expenses = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'expense')
+        total_income = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'income' and t.get('payment_method') == 'bank')
+        total_expenses = sum((t.get('amount') or 0) for t in transactions if t.get('type') == 'expense' and t.get('payment_method') == 'bank')
+
+        # Calculate current balances using starting balances
+        # current cash box balance from starting balance plus cash_in minus cash_out
+        current_cash_box_balance = starting_balance.get('starting_cash', 0) + cash_in - cash_out
+        
+        # current primary account balance from starting balance plus total_income minus total_expenses
+        current_account_balance = starting_balance.get('starting_balance', 0) + total_income - total_expenses
    
         # Debug logging
         logger.info(f"Account data: {accounts}")
@@ -237,7 +251,9 @@ def monthly_activity():
                 'cash_out': _num(cash_out),
                 'income': _num(total_income),
                 'expenses': _num(total_expenses),
-                'starting_balance': _num(accounts.get('balance', 0)) - ( _num(total_income) - _num(total_expenses) )
+                'starting_balance': _num(current_account_balance),
+                'starting_cash': _num(current_cash_box_balance),
+                #'starting_balance': _num(accounts.get('balance', 0)) - ( _num(total_income) - _num(total_expenses) )
             })
 
             # Coerce other account numeric fields that templates may access
@@ -453,7 +469,7 @@ def add_transaction():
             'payment_method': method,
             'transaction_date': transaction_date
         }).execute()
-
+        
         # Fetch the current primary balance
         account = supabase.table('accounts').select('primary_account').eq('id', account_id).single().execute()
         current_primary_bank = account.data['primary_account'] if account.data else 0
