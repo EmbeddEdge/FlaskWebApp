@@ -501,6 +501,12 @@ def add_transaction():
         }).eq('id', account_id).execute()
         
         logger.info(f"Added {transaction_type} transaction: {amount}")
+        
+        # Check if a specific redirect URL was provided
+        redirect_to = request.form.get('redirect_to')
+        if redirect_to:
+            return redirect(redirect_to)
+            
         return redirect('/')
         
     except Exception as e:

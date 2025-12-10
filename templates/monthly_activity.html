@@ -457,8 +457,9 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {{ transaction.transaction_date[:10] if transaction.transaction_date else ''
                                             }}
-                                            <button
-                                                onclick="openEditDateModal('{{ transaction.id }}', '{{ transaction.transaction_date[:10] if transaction.transaction_date else '' }}')"
+                                            <button onclick="openEditDateModal(this)"
+                                                data-transaction-id="{{ transaction.id }}"
+                                                data-transaction-date="{{ transaction.transaction_date[:10] if transaction.transaction_date else '' }}"
                                                 class="ml-2 text-blue-600 hover:text-blue-800">
                                                 <i class="fas fa-edit"></i>
                                             </button>
@@ -497,6 +498,8 @@
                     <div class="mt-3 text-center">
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Add Transaction</h3>
                         <form action="/transactions/add" method="POST" class="mt-4">
+                            <input type="hidden" name="redirect_to"
+                                value="/monthly_activity?month={{ reconciled_data.month[:7] if reconciled_data and reconciled_data.month else today.strftime('%Y-%m') }}">
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="type">
                                     Type
