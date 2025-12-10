@@ -1,7 +1,7 @@
 # Secondary Account Finance Render Hosted Flask app with Supabase integration
 import os
 from datetime import datetime, timedelta
-from flask import Flask, request, jsonify, render_template # type: ignore
+from flask import Flask, request, jsonify, render_template, redirect, flash, url_for # type: ignore
 import psycopg2 # type: ignore
 from psycopg2.extras import RealDictCursor
 from supabase import create_client, Client
@@ -12,6 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+app.secret_key = 'dev_key_change_this_in_production'
 
 # Configuration - These should be set as environment variables
 SUPABASE_URL = os.environ.get('SUPABASE_URL')
@@ -500,8 +501,11 @@ def add_transaction():
             'cash_box': new_cash_box
         }).eq('id', account_id).execute()
         
+        
         logger.info(f"Added {transaction_type} transaction: {amount}")
         
+        flash('Transaction added successfully!', 'success')
+
         # Check if a specific redirect URL was provided
         redirect_to = request.form.get('redirect_to')
         if redirect_to:
