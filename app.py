@@ -343,10 +343,12 @@ def reconcile_month_close():
             transactions = transactions_response.data or []
 
             reconciled_data = supabase.table('reconciled_months')\
-                .select('starting_balance')\
+                .select('starting_balance, starting_cash')\
                 .eq('month', month_start)\
                 .execute()
             starting_balance = reconciled_data.data[0]['starting_balance'] if reconciled_data.data else 0
+            starting_cash = reconciled_data.data[0]['starting_cash'] if reconciled_data.data else 0
+            starting_total_balance = starting_balance + starting_cash
 
             total_income = sum(t['amount'] for t in transactions if t.get('type') == 'income')
             total_expenses = sum(t['amount'] for t in transactions if t.get('type') == 'expense')
@@ -354,22 +356,26 @@ def reconcile_month_close():
             formatted_month = datetime.strptime(month_start, '%Y-%m-%d').strftime('%B %Y')
 
             return render_template('reconcile_month.html', month=month_start, formatted_month=formatted_month,
-                                    total_income=total_income, total_expenses=total_expenses, starting_balance=starting_balance)
+                                    total_income=total_income, total_expenses=total_expenses, starting_total_balance=starting_total_balance)
 
         # POST - process manual closing balance and mark reconciled
         data = request.form or request.get_json() or {}
+        logger.info(f"Reconciling month: {data}")
         month = data.get('month')
         closing_balance_raw = data.get('closing_balance')
+        closing_cash_raw = data.get('closing_cash')
         if not month or closing_balance_raw is None:
             return render_template('reconcile_month.html', error='Missing required fields', month=month or datetime.today().strftime('%Y-%m-01'), total_income=0, total_expenses=0)
 
         closing_balance = float(closing_balance_raw)
+        closing_cash = float(closing_cash_raw)
 
         # Update existing reconciliation record
         update_resp = supabase.table('reconciled_months')\
             .update({
                 'is_reconciled': True,
                 'closing_balance': closing_balance,
+                'closing_cash': closing_cash,
                 'reconciled_at': datetime.now().isoformat()
             })\
             .eq('month', month)\

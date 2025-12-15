@@ -1,0 +1,32 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.4 Chrome/138.0.7204.97 Electron/37.2.1 Safari/537.36" version="28.0.4">
+  <diagram name="Page-1" id="zoeCNvZh1v43kjJgsTx0">
+    <mxGraphModel dx="946" dy="732" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="WJ7xelXD1pV57BxJ_QiL-3" value="Supabase" style="whiteSpace=wrap;html=1;aspect=fixed;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;" parent="1" vertex="1">
+          <mxGeometry x="550" y="160" width="250" height="250" as="geometry" />
+        </mxCell>
+        <object label="&lt;div style=&quot;text-align: right;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Render&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;" CPU="0.1" Storage="512MB" id="WJ7xelXD1pV57BxJ_QiL-1">
+          <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;align=center;labelPosition=center;verticalLabelPosition=top;verticalAlign=bottom;" parent="1" vertex="1">
+            <mxGeometry x="280" y="150" width="180" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="WJ7xelXD1pV57BxJ_QiL-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="WJ7xelXD1pV57BxJ_QiL-2" target="WJ7xelXD1pV57BxJ_QiL-4" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WJ7xelXD1pV57BxJ_QiL-2" value="Flask Application" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="330" y="200" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="WJ7xelXD1pV57BxJ_QiL-4" value="Transactions Database" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="590" y="200" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="7G2HspYmSdJnPkfMjJcE-2" value="Accounts Database" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="590" y="300" width="80" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
