@@ -33,17 +33,13 @@
 
       <form action="/reconcile_month/close" method="POST" class="space-y-4">
         <input type="hidden" name="month" value="{{ month }}" />
+        <input type="hidden" name="bank_balance" value="{{ bank_balance }}" />
+        <input type="hidden" name="cash_balance" value="{{ cash_balance }}" />
         <div>
           <label class="block text-sm font-medium text-gray-700">Closing Balance (enter manually)</label>
           <input name="closing_balance" type="number" step="0.01" required
             class="mt-1 block w-full rounded border px-3 py-2"
             value="{{ closing_balance if closing_balance is defined else '' }}" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Closing Cash (enter manually)</label>
-          <input name="closing_cash" type="number" step="0.01" required
-            class="mt-1 block w-full rounded border px-3 py-2"
-            value="{{ closing_cash if closing_cash is defined else '' }}" />
         </div>
         <div class="flex items-center gap-3">
           <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Confirm Reconcile</button>

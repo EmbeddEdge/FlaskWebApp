@@ -326,7 +326,7 @@
                                         </span>
                                         {% if not reconciled_data.is_reconciled %}
                                         <!-- Navigate to a dedicated reconciliation page where the user can input the closing balance -->
-                                        <a href="/reconcile_month/close?month={{ reconciled_data.month[:10] if reconciled_data and reconciled_data.month else today.strftime('%Y-%m-01') }}"
+                                        <a href="/reconcile_month/close?month={{ reconciled_data.month[:10] if reconciled_data and reconciled_data.month else today.strftime('%Y-%m-01') }}&cash_balance={{ accounts.cash_box if accounts else 0 }}&bank_balance={{ accounts.primary_account if accounts else 0 }}"
                                             class="cookie-btn font-bold py-1 px-3 rounded text-sm">
                                             <i class="fas fa-check mr-1"></i> Reconcile Month
                                         </a>

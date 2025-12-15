@@ -325,6 +325,12 @@ def reconcile_month_close():
     try:
         if request.method == 'GET':
             month = request.args.get('month', datetime.today().strftime('%Y-%m-01'))
+            cash_balance_raw = request.args.get('cash_balance', 0)
+            bank_balance_raw = request.args.get('bank_balance', 0)
+
+            cash_balance = float(cash_balance_raw) if cash_balance_raw else 0
+            bank_balance = float(bank_balance_raw) if bank_balance_raw else 0
+
             # Normalize month to YYYY-MM-01
             try:
                 month_date = datetime.strptime(month, '%Y-%m-%d')
@@ -356,25 +362,26 @@ def reconcile_month_close():
             formatted_month = datetime.strptime(month_start, '%Y-%m-%d').strftime('%B %Y')
 
             return render_template('reconcile_month.html', month=month_start, formatted_month=formatted_month,
-                                    total_income=total_income, total_expenses=total_expenses, starting_total_balance=starting_total_balance)
+                                    total_income=total_income, total_expenses=total_expenses, starting_total_balance=starting_total_balance, cash_balance=cash_balance, bank_balance=bank_balance)
 
         # POST - process manual closing balance and mark reconciled
         data = request.form or request.get_json() or {}
         logger.info(f"Reconciling month: {data}")
         month = data.get('month')
-        closing_balance_raw = data.get('closing_balance')
-        closing_cash_raw = data.get('closing_cash')
-        if not month or closing_balance_raw is None:
+        closing_balance = data.get('closing_balance')
+        closing_cash = data.get('cash_balance')
+        closing_bank = data.get('bank_balance')
+        #print closing_balance and closing_cash
+        print(closing_balance)
+        print(closing_cash)
+        if not month or closing_balance is None or closing_cash is None:
             return render_template('reconcile_month.html', error='Missing required fields', month=month or datetime.today().strftime('%Y-%m-01'), total_income=0, total_expenses=0)
-
-        closing_balance = float(closing_balance_raw)
-        closing_cash = float(closing_cash_raw)
 
         # Update existing reconciliation record
         update_resp = supabase.table('reconciled_months')\
             .update({
                 'is_reconciled': True,
-                'closing_balance': closing_balance,
+                'closing_balance': closing_bank,
                 'closing_cash': closing_cash,
                 'reconciled_at': datetime.now().isoformat()
             })\
@@ -386,7 +393,8 @@ def reconcile_month_close():
             supabase.table('reconciled_months').insert({
                 'month': month,
                 'is_reconciled': True,
-                'closing_balance': closing_balance,
+                'closing_balance': closing_bank,
+                'closing_cash': closing_cash,
                 'reconciled_at': datetime.now().isoformat()
             }).execute()
 
